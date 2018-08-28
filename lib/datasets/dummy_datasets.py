@@ -17,61 +17,53 @@ cases, like getting all classes in a dataset. This exists so that demos can be
 run without requiring users to download/install datasets first.
 """
 
-from __future__ import absolute_import , division , print_function , unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
 
 import json
 
 from utils.collections import AttrDict
 
 
-def get_coco_dataset ( ) :
+def get_coco_dataset():
     """A dummy COCO dataset that includes only the 'classes' field."""
-    ds = AttrDict ( )
+    ds = AttrDict()
     classes = [
-        '__background__' , 'person' , 'bicycle' , 'car' , 'motorcycle' , 'airplane' ,
-        'bus' , 'train' , 'truck' , 'boat' , 'traffic light' , 'fire hydrant' ,
-        'stop sign' , 'parking meter' , 'bench' , 'bird' , 'cat' , 'dog' , 'horse' ,
-        'sheep' , 'cow' , 'elephant' , 'bear' , 'zebra' , 'giraffe' , 'backpack' ,
-        'umbrella' , 'handbag' , 'tie' , 'suitcase' , 'frisbee' , 'skis' ,
-        'snowboard' , 'sports ball' , 'kite' , 'baseball bat' , 'baseball glove' ,
-        'skateboard' , 'surfboard' , 'tennis racket' , 'bottle' , 'wine glass' ,
-        'cup' , 'fork' , 'knife' , 'spoon' , 'bowl' , 'banana' , 'apple' , 'sandwich' ,
-        'orange' , 'broccoli' , 'carrot' , 'hot dog' , 'pizza' , 'donut' , 'cake' ,
-        'chair' , 'couch' , 'potted plant' , 'bed' , 'dining table' , 'toilet' , 'tv' ,
-        'laptop' , 'mouse' , 'remote' , 'keyboard' , 'cell phone' , 'microwave' ,
-        'oven' , 'toaster' , 'sink' , 'refrigerator' , 'book' , 'clock' , 'vase' ,
-        'scissors' , 'teddy bear' , 'hair drier' , 'toothbrush'
+        '__background__', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
+        'bus', 'train', 'truck', 'boat', 'traffic light', 'fire hydrant',
+        'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse',
+        'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe', 'backpack',
+        'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee', 'skis',
+        'snowboard', 'sports ball', 'kite', 'baseball bat', 'baseball glove',
+        'skateboard', 'surfboard', 'tennis racket', 'bottle', 'wine glass',
+        'cup', 'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple', 'sandwich',
+        'orange', 'broccoli', 'carrot', 'hot dog', 'pizza', 'donut', 'cake',
+        'chair', 'couch', 'potted plant', 'bed', 'dining table', 'toilet', 'tv',
+        'laptop', 'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
+        'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase',
+        'scissors', 'teddy bear', 'hair drier', 'toothbrush'
     ]
-    ds.classes = { i : name for i , name in enumerate ( classes ) }
+    ds.classes = {i: name for i, name in enumerate(classes)}
     return ds
 
 
-def get_mapillary_dataset ( ) :
-    ds = AttrDict ( )
-    classes = [ '__background__','Bird' , 'Ground Animal' , 'Crosswalk - Plain' , 'Person' , 'Bicyclist' , 'Motorcyclist' ,
-                'Other Rider' ,
-                'Lane Marking - Crosswalk' , 'Banner' , 'Bench' , 'Bike Rack' , 'Billboard' , 'Catch Basin' ,
-                'CCTV Camera' ,
-                'Fire Hydrant' , 'Junction Box' , 'Mailbox' , 'Manhole' , 'Phone Booth' , 'Street Light' , 'Pole' ,
-                'Traffic Sign Frame' , 'Utility Pole' , 'Traffic Light' , 'Traffic Sign (Back)' ,
-                'Traffic Sign (Front)' ,
-                'Trash Can' , 'Bicycle' , 'Boat' , 'Bus' , 'Car' , 'Caravan' , 'Motorcycle' , 'Other Vehicle' ,
-                'Trailer' ,
-                'Truck' , 'Wheeled Slow' ]
-    ds.classes = { i : name for i , name in enumerate ( classes ) }
+def get_mapillary_dataset():
+    ds = AttrDict()
+    classes = ['__background__', 'Bird', 'Ground Animal', 'Crosswalk - Plain', 'Person', 'Bicyclist', 'Motorcyclist',
+               'Other Rider',
+               'Lane Marking - Crosswalk', 'Banner', 'Bench', 'Bike Rack', 'Billboard', 'Catch Basin',
+               'CCTV Camera',
+               'Fire Hydrant', 'Junction Box', 'Mailbox', 'Manhole', 'Phone Booth', 'Street Light', 'Pole',
+               'Traffic Sign Frame', 'Utility Pole', 'Traffic Light', 'Traffic Sign (Back)',
+               'Traffic Sign (Front)',
+               'Trash Can', 'Bicycle', 'Boat', 'Bus', 'Car', 'Caravan', 'Motorcycle', 'Other Vehicle',
+               'Trailer',
+               'Truck', 'Wheeled Slow']
+    ds.classes = {i: name for i, name in enumerate(classes)}
     return ds
 
-def get_kitti_dataset ( ) :
-    ds = AttrDict ( )
-    classes = [ '__background__','Bird' , 'Ground Animal' , 'Crosswalk - Plain' , 'Person' , 'Bicyclist' , 'Motorcyclist' ,
-                'Other Rider' ,
-                'Lane Marking - Crosswalk' , 'Banner' , 'Bench' , 'Bike Rack' , 'Billboard' , 'Catch Basin' ,
-                'CCTV Camera' ,
-                'Fire Hydrant' , 'Junction Box' , 'Mailbox' , 'Manhole' , 'Phone Booth' , 'Street Light' , 'Pole' ,
-                'Traffic Sign Frame' , 'Utility Pole' , 'Traffic Light' , 'Traffic Sign (Back)' ,
-                'Traffic Sign (Front)' ,
-                'Trash Can' , 'Bicycle' , 'Boat' , 'Bus' , 'Car' , 'Caravan' , 'Motorcycle' , 'Other Vehicle' ,
-                'Trailer' ,
-                'Truck' , 'Wheeled Slow' ]
-    ds.classes = { i : name for i , name in enumerate ( classes ) }
+
+def get_kitti_dataset():
+    ds = AttrDict()
+    classes = ['person', 'rider', 'car', 'truck', 'bus', 'carvanan', 'trailer', 'train', 'motorcycle', 'bicycle']
+    ds.classes = {i: name for i, name in enumerate(classes)}
     return ds

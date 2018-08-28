@@ -235,26 +235,26 @@ def gen_coco_data(p, orig_id, task, images, annotations):
     p.join()
 
 kitti_id_map = [24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
-kitti_category = [{"id": 24, "name": "person", "supercategory": "human"},
-                  {"id": 25, "name": "rider", "supercategory": "human"},
-                  {"id": 26, "name": "car", "supercategory": "vehicle"},
-                  {"id": 27, "name": "truck", "supercategory": "vehicle"},
-                  {"id": 28, "name": "bus", "supercategory": "vehicle"},
-                  {"id": 29, "name": "carvanan", "supercategory": "vehicle"},
-                  {"id": 30, "name": "trailer", "supercategory": "vehicle"},
-                  {"id": 31, "name": "train", "supercategory": "vehicle"},
-                  {"id": 32, "name": "motorcycle", "supercategory": "vehicle"},
-                  {"id": 33, "name": "bicycle", "supercategory": "vehicle"}]
+kitti_category = [{"id": 1, "name": "person", "supercategory": "human"},
+                  {"id": 2, "name": "rider", "supercategory": "human"},
+                  {"id": 3, "name": "car", "supercategory": "vehicle"},
+                  {"id": 4, "name": "truck", "supercategory": "vehicle"},
+                  {"id": 5, "name": "bus", "supercategory": "vehicle"},
+                  {"id": 6, "name": "carvanan", "supercategory": "vehicle"},
+                  {"id": 7, "name": "trailer", "supercategory": "vehicle"},
+                  {"id": 8, "name": "train", "supercategory": "vehicle"},
+                  {"id": 9, "name": "motorcycle", "supercategory": "vehicle"},
+                  {"id": 10, "name": "bicycle", "supercategory": "vehicle"}]
 
 if __name__ == '__main__':
-    task = "training"
+    task = "testing"
     p = Pool()
     # task = 'validation'
     manager = Manager()
     images = manager.dict()
     annotations = manager.dict()
     config_file = os.path.join(Data_ROOT, 'config.json')
-    json_file = '/nfs/project/libo_i/go_kitti/data/training/annotations/{}.json'.format(task)
+    json_file = '/nfs/project/libo_i/go_kitti/data/annotations/{}.json'.format(task)
     # category, orig_id = gen_category(config_file)
 
     gen_coco_data(p, kitti_id_map, task, images, annotations)

@@ -118,6 +118,9 @@ if __name__ == '__main__':
     elif args.dataset == "coco_2017_val":
         cfg.TEST.DATASETS = ('coco_2017_val',)
         cfg.MODEL.NUM_CLASSES = 38
+    elif args.dataset == "kitti_test":
+        cfg.TRAIN.DATASETS = ('kitti_test',)
+        cfg.MODEL.NUM_CLASSES = 10
     else:  # For subprocess call
         assert cfg.TEST.DATASETS, 'cfg.TEST.DATASETS shouldn\'t be empty'
     assert_and_infer_cfg()

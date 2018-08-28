@@ -58,6 +58,18 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/apolloscape/annotations/training.json'
     },
+    'kitti_train': {
+        IM_DIR:
+            _DATA_DIR + '/kitti/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/kitti/annotations/training.json'
+    },
+    'kitti_test': {
+        IM_DIR:
+            _DATA_DIR + '/kitti/testing/image_2',
+        ANN_FN:
+            _DATA_DIR + '/kitti/annotations/testing.json'
+    },
     'mapillary_train_val':
     {
 	    IM_DIR:
