@@ -60,3 +60,18 @@ def get_mapillary_dataset ( ) :
                 'Truck' , 'Wheeled Slow' ]
     ds.classes = { i : name for i , name in enumerate ( classes ) }
     return ds
+
+def get_kitti_dataset ( ) :
+    ds = AttrDict ( )
+    classes = [ '__background__','Bird' , 'Ground Animal' , 'Crosswalk - Plain' , 'Person' , 'Bicyclist' , 'Motorcyclist' ,
+                'Other Rider' ,
+                'Lane Marking - Crosswalk' , 'Banner' , 'Bench' , 'Bike Rack' , 'Billboard' , 'Catch Basin' ,
+                'CCTV Camera' ,
+                'Fire Hydrant' , 'Junction Box' , 'Mailbox' , 'Manhole' , 'Phone Booth' , 'Street Light' , 'Pole' ,
+                'Traffic Sign Frame' , 'Utility Pole' , 'Traffic Light' , 'Traffic Sign (Back)' ,
+                'Traffic Sign (Front)' ,
+                'Trash Can' , 'Bicycle' , 'Boat' , 'Bus' , 'Car' , 'Caravan' , 'Motorcycle' , 'Other Vehicle' ,
+                'Trailer' ,
+                'Truck' , 'Wheeled Slow' ]
+    ds.classes = { i : name for i , name in enumerate ( classes ) }
+    return ds
