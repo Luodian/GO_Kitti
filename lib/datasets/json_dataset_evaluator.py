@@ -43,12 +43,12 @@ def evaluate_masks(
     # res_file = os.path.join (
     # 	output_dir , 'segmentations_' + json_dataset.name + '_results'
     # )
-    res_file = os.path.join('/nfs/project/libo_i/mask-rcnn.pytorch', 'segmentations_' + method_name + '_results')
+    res_file = os.path.join(output_dir, 'segmentations_' + method_name + '_results')
 
     if use_salt:
         res_file += '_{}'.format(str(uuid.uuid4()))
     res_file += '.json'
-    _write_coco_segms_results_file(json_dataset, all_boxes, all_segms, res_file, images_path)
+    _write_coco_segms_results_file(json_dataset, all_boxes, all_segms, res_file)
     # Only do evaluation on non-test sets (annotations are undisclosed on test)
     if json_dataset.name.find('test') == -1:
         coco_eval = _do_segmentation_eval(json_dataset, res_file, output_dir)
@@ -60,41 +60,30 @@ def evaluate_masks(
     return coco_eval
 
 
-def _write_coco_segms_results_file(json_dataset, all_boxes, all_segms, res_file, images_path):
+def _write_coco_segms_results_file(
+        json_dataset, all_boxes, all_segms, res_file
+):
     # [{"image_id": 42,
     #   "category_id": 18,
     #   "segmentation": [...],
     #   "score": 0.236}, ...]
     results = []
-
-    # 用于存储非1-37连续的数组标签。
-    category_map = {}
-
-    with open('/nfs/project/libo_i/mask-rcnn.pytorch/config.json') as config_file:
-        config = json.load(config_file)
-    # in this example we are only interested in the labels
-    labels = config['labels']
-
-    cnt = 1
-    for item in labels:
-        category_map[item['readable']] = cnt
-        cnt += 1
-
     for cls_ind, cls in enumerate(json_dataset.classes):
         if cls == '__background__':
             continue
         if cls_ind >= len(all_boxes):
             break
-        cat_id = category_map[cls]
-        results.extend(
-            _coco_segms_results_one_category(json_dataset, all_boxes[cls_ind], all_segms[cls_ind], cat_id,
-                                             images_path))
-
-    logger.info('Writing segmentation results json to: {}'.format(os.path.abspath(res_file)))
+        cat_id = json_dataset.category_to_id_map[cls]
+        results.extend(_coco_segms_results_one_category(
+            json_dataset, all_boxes[cls_ind], all_segms[cls_ind], cat_id))
+    logger.info(
+        'Writing segmentation results json to: {}'.format(
+            os.path.abspath(res_file)))
     with open(res_file, 'w') as fid:
         json.dump(results, fid)
 
-def _coco_segms_results_one_category(json_dataset, boxes, segms, cat_id, images_path):
+
+def _coco_segms_results_one_category(json_dataset, boxes, segms, cat_id):
     results = []
     image_ids = json_dataset.COCO.getImgIds()
     image_ids.sort()
@@ -110,20 +99,12 @@ def _coco_segms_results_one_category(json_dataset, boxes, segms, cat_id, images_
         dets = dets.astype(np.float)
         scores = dets[:, -1]
 
-        # results.extend (
-        # 	[ { 'image_id' : images_path [ i ] ,
-        # 	    'category_id' : cat_id ,
-        # 	    'segmentation' : rles [ k ] ,
-        # 	    'score' : scores [ k ] }
-        # 	  for k in range ( dets.shape [ 0 ] ) ] )
-
-        # 在eval时需要使用image_id，在json时需要使用images_path[i]
         results.extend(
-            [{'image_id': images_path[i],
+            [{'image_id': image_id,
               'category_id': cat_id,
               'segmentation': rles[k],
               'score': scores[k]}
-             for k in range(dets.shape[0])])
+              for k in range(dets.shape[0])])
 
     return results
 

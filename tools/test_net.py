@@ -7,7 +7,7 @@ import sys
 import cv2
 import torch
 
-sys.path.insert(0, '/nfs/project/libo_i/mask-rcnn.pytorch/lib')
+sys.path.insert(0, '/nfs/project/libo_i/go_kitti/lib')
 import utils.logging
 from core.config import assert_and_infer_cfg, cfg, merge_cfg_from_file, merge_cfg_from_list
 from core.test_engine import run_inference
@@ -41,7 +41,7 @@ def parse_args():
         help='mid json path')
 
     parser.add_argument(
-        '--if_save_mid_json', dest='if_save_mid_json', help='whether save mid result', action='store_true')
+        '--infer_test', help='whether if we only infer test', action='store_true')
 
     parser.add_argument(
         '--method', dest='method_name', help='path to the detectron weight pickle file')
@@ -103,15 +103,9 @@ if __name__ == '__main__':
     if args.dataset == "coco2017_20pct":
         cfg.TEST.DATASETS = ('coco_2017_val_20pct',)
         cfg.MODEL.NUM_CLASSES = 38
-    elif args.dataset == "coco_2017_10pic_no_ann":
-        cfg.TEST.DATASETS = ('coco_2017_10pic_no_ann',)
-        cfg.MODEL.NUM_CLASSES = 38
-    elif args.dataset == "coco_2017_val_20pct_new":
-        cfg.TEST.DATASETS = ('coco_2017_val_20pct_new',)
-        cfg.MODEL.NUM_CLASSES = 38
-    elif args.dataset == "coco2017_4pic":
-        cfg.TEST.DATASETS = ('coco_2017_val_4pic',)
-        cfg.MODEL.NUM_CLASSES = 38
+    elif args.dataset == "kitti_test_4imgs":
+        cfg.TEST.DATASETS = ('kitti_test_4imgs',)
+        cfg.MODEL.NUM_CLASSES = 10
     elif args.dataset == "coco_2017_test":
         cfg.TEST.DATASETS = ('coco_2017_test',)
         cfg.MODEL.NUM_CLASSES = 38
@@ -119,7 +113,10 @@ if __name__ == '__main__':
         cfg.TEST.DATASETS = ('coco_2017_val',)
         cfg.MODEL.NUM_CLASSES = 38
     elif args.dataset == "kitti_test":
-        cfg.TRAIN.DATASETS = ('kitti_test',)
+        cfg.TEST.DATASETS = ('kitti_test',)
+        cfg.MODEL.NUM_CLASSES = 10
+    elif args.dataset == "kitti_test_20":
+        cfg.TEST.DATASETS = ('kitti_test_20',)
         cfg.MODEL.NUM_CLASSES = 10
     else:  # For subprocess call
         assert cfg.TEST.DATASETS, 'cfg.TEST.DATASETS shouldn\'t be empty'

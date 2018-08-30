@@ -220,19 +220,22 @@ def vis_labels(p, task, label_ids, label_names):
 
 
 def gen_coco_data(p, orig_id, task, images, annotations):
-    data_path = "/nfs/project/libo_i/go_kitti/data/training/instance"
+    data_path = "/nfs/project/libo_i/go_kitti/data/training/image_2"
     file_list = os.listdir(data_path)
 
-    for i in range(len(file_list)):
+    num_img = 20
+
+    for i in range(180, 180 + num_img):
         # for i in range(len(select_list)):
         # process_file(task, file_list[i], i+1, len(file_list), orig_id, images, annotations)
         p.apply_async(process_file,
-                      args=(task, file_list[i], i + 1, len(file_list), orig_id, images, annotations
+                      args=(task, file_list[i], i + 1, num_img, orig_id, images, annotations
                             ,))
     # p.apply_async(process_file, args=(task, file_list[select_list[i]], i+1, len(select_list), orig_id, images,
     # annotations,))
     p.close()
     p.join()
+
 
 kitti_id_map = [24, 25, 26, 27, 28, 29, 30, 31, 32, 33]
 kitti_category = [{"id": 1, "name": "person", "supercategory": "human"},
@@ -247,14 +250,14 @@ kitti_category = [{"id": 1, "name": "person", "supercategory": "human"},
                   {"id": 10, "name": "bicycle", "supercategory": "vehicle"}]
 
 if __name__ == '__main__':
-    task = "testing"
+    task = "training"
     p = Pool()
     # task = 'validation'
     manager = Manager()
     images = manager.dict()
     annotations = manager.dict()
     config_file = os.path.join(Data_ROOT, 'config.json')
-    json_file = '/nfs/project/libo_i/go_kitti/data/annotations/{}.json'.format(task)
+    json_file = '/nfs/project/libo_i/go_kitti/data/annotations/{}_20.json'.format(task)
     # category, orig_id = gen_category(config_file)
 
     gen_coco_data(p, kitti_id_map, task, images, annotations)

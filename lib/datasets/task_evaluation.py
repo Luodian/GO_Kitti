@@ -67,7 +67,7 @@ def evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir, images_pa
     if cfg.INFER_SUBMIT_ONLY:
         print ("Inferenec all done.")
         exit()
-    return None
+    return results
 
 
 def evaluate_boxes(dataset, all_boxes, output_dir, use_matlab=False):

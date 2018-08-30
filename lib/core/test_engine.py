@@ -35,12 +35,14 @@ from core.config import cfg
 # from core.rpn_generator import generate_rpn_on_dataset  #TODO: for rpn only case
 # from core.rpn_generator import generate_rpn_on_range
 from core.test import im_detect_all
+
 from datasets import task_evaluation
 from datasets.json_dataset import JsonDataset
 from modeling import model_builder
 from utils.detectron_weight_helper import load_detectron_weight
 from utils.io import save_object
 from utils.timer import Timer
+import pycocotools.mask as mask_util
 
 logger = logging.getLogger(__name__)
 
@@ -174,27 +176,68 @@ def test_net_on_dataset(
     logger.info('Total inference time: {:.3f}s'.format(test_timer.average_time))
     method_name = args.method_name
     print(method_name)
-    if args.if_save_mid_json:
-        import json
-        import copy
-        output_json = {'all_boxes': [],
-                       'all_segms': [],
-                       }
-        all_box = copy.deepcopy(all_boxes)
-        for cls_id in range(1, len(all_boxes)):
-            for imgid in range(len(all_boxes[cls_id])):
-                all_box[cls_id][imgid] = all_box[cls_id][imgid].tolist()
-        output_json['all_boxes'] = all_box
-        output_json['all_segms'] = all_segms
-        json_path = args.save_mid_json_path
-        print("Save {}".format(json_path))
-        open(json_path, 'w').write(json.dumps(output_json))
+    if args.infer_test:
+        kitti_test_num = 200
+        kitti_cls_num = 10
+        kitti_dataset_name = 'Kitti2015'
+        pred_list_name = 'pred_list'
+        pred_img_name = 'pred_img'
+
+        test_image_path = "/nfs/project/libo_i/go_kitti/data/testing/image_2"
+        test_image_list = os.listdir(test_image_path)
+
+        pred_list_path = os.path.join(output_dir, pred_list_name)
+        pred_img_path = os.path.join(output_dir, pred_img_name)
+
+        # Ensure path exists.
+        if not os.path.exists(pred_list_path):
+            os.makedirs(pred_list_path)
+
+        if not os.path.exists(pred_img_path):
+            os.makedirs(pred_img_path)
+
+        # assert kitti_test_num == len(test_image_list)
+
+        for img_id in range(kitti_test_num):
+            im = cv2.imread(os.path.join(test_image_path, test_image_list[img_id]))
+            ist_cnt = 0
+            text_save_name = "{}_{}.txt".format(kitti_dataset_name, test_image_list[img_id][:-4])
+            text_save_path = os.path.join(pred_list_path, text_save_name)
+            file = open(text_save_path, "w")
+            for cls_id in range(kitti_cls_num):
+                if len(all_segms[cls_id]) != 0:
+                    cls_item = all_segms[cls_id][img_id]
+                    if len(cls_item) != 0:
+                        for ist_id, specific_item in enumerate(cls_item):
+                            # write image info
+                            mask = np.array(mask_util.decode(specific_item), dtype=np.float32)
+                            instances_graph = np.zeros((im.shape[0], im.shape[1]))
+                            instances_graph[mask == 1] = 255
+                            instance_save_name = "{}_{}_{:0>3d}.png".format(kitti_dataset_name, test_image_list[img_id],
+                                                                            ist_cnt)
+                            print(instance_save_name)
+                            instance_save_path = os.path.join(pred_img_path, instance_save_name)
+                            import scipy.misc as msc
+                            msc.imsave(instance_save_path, instances_graph)
+
+                            # write text info
+                            # ../pred_img/Kitti2015_000000_10_000.png 026 0.976347
+                            instance_info_To_Text = "../pred_img/{} {:0>3d} {}\n".format(instance_save_name, cls_id + 24,
+                                                                                       all_boxes[cls_id][img_id][
+                                                                                           ist_id][4])
+                            ist_cnt += 1
+                            file.writelines(instance_info_To_Text)
+
+            file.close()
+
+        # solid exit out.
         exit(0)
     # start to output submit format files and use ann['annotations'] to evaluate the metrics.
     else:
         results = task_evaluation.evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir, images_path,
                                                method_name)
         return results
+
 
 def multi_gpu_test_net_on_dataset(
         args, dataset_name, proposal_file, num_images, output_dir):

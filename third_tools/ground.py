@@ -35,10 +35,5 @@ def anlyze_single_image():
                 instance_label_id_mask = np.array(instance_label_id_mask, dtype=np.uint8)
 
 
-with open("/nfs/project/libo_i/go_kitti/data/annotations/testing.json") as f:
-    json_data = json.load(f)
-    ct_list = []
-    for item in json_data['categories']:
-        ct_list.append(item['name'])
-    print(ct_list)
-    print("ook~")
+for i in range(1,200):
+    print ("{:0>3d}".format(i))

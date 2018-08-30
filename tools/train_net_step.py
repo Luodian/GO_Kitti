@@ -9,7 +9,7 @@ import sys
 import traceback
 from collections import defaultdict
 
-sys.path.insert(0, '/nfs/project/libo_i/mask-rcnn.pytorch/lib')
+sys.path.insert(0, '/nfs/project/libo_i/go_kitti/lib')
 import cv2
 import torch
 import torch.nn as nn
@@ -173,6 +173,9 @@ def main():
         cfg.MODEL.NUM_CLASSES = 9
     elif args.dataset == "kitti_train":
         cfg.TRAIN.DATASETS = ('kitti_train',)
+        cfg.MODEL.NUM_CLASSES = 10
+    elif args.dataset == "kitti_train_180":
+        cfg.TRAIN.DATASETS = ('kitti_train_180',)
         cfg.MODEL.NUM_CLASSES = 10
     else:
         raise ValueError("Unexpected args.dataset: {}".format(args.dataset))

@@ -60,15 +60,33 @@ DATASETS = {
     },
     'kitti_train': {
         IM_DIR:
-            _DATA_DIR + '/kitti/training/image_2',
+            _DATA_DIR + '/training/image_2',
         ANN_FN:
-            _DATA_DIR + '/kitti/annotations/training.json'
+            _DATA_DIR + '/annotations/training.json'
+    },
+    'kitti_train_180': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_180.json'
     },
     'kitti_test': {
         IM_DIR:
-            _DATA_DIR + '/kitti/testing/image_2',
+            _DATA_DIR + '/testing/image_2',
         ANN_FN:
-            _DATA_DIR + '/kitti/annotations/testing.json'
+            _DATA_DIR + '/annotations/testing.json'
+    },
+    'kitti_test_20': {
+        IM_DIR:
+            _DATA_DIR + '/testing/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/testing_20.json'
+    },
+    'kitti_test_4imgs': {
+        IM_DIR:
+            _DATA_DIR + '/testing/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/testing_4imgs.json'
     },
     'mapillary_train_val':
     {
