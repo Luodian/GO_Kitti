@@ -64,6 +64,7 @@ def get_mapillary_dataset():
 
 def get_kitti_dataset():
     ds = AttrDict()
-    classes = ['person', 'rider', 'car', 'truck', 'bus', 'carvanan', 'trailer', 'train', 'motorcycle', 'bicycle']
+    classes = ['__background__', 'person', 'rider', 'car', 'truck', 'bus', 'carvanan', 'trailer', 'train', 'motorcycle',
+               'bicycle']
     ds.classes = {i: name for i, name in enumerate(classes)}
     return ds
