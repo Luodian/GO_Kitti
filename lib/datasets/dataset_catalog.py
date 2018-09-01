@@ -76,9 +76,10 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/annotations/testing.json'
     },
+    # 这个train的20imgs
     'kitti_test_20': {
         IM_DIR:
-            _DATA_DIR + '/testing/image_2',
+            _DATA_DIR + '/training/image_2',
         ANN_FN:
             _DATA_DIR + '/annotations/testing_20.json'
     },

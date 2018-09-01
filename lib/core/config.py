@@ -33,6 +33,7 @@ __C.ENSAMBLE_METRIC = False
 __C.INFER_SUBMIT_ONLY = False
 # Random note: avoid using '.ON' as a config key since yaml converts it to True;
 # prefer 'ENABLED' instead
+__C.INFER_OR_TEST = False
 
 # ---------------------------------------------------------------------------- #
 # Training options
