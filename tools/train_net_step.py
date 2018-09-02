@@ -173,10 +173,10 @@ def main():
         cfg.MODEL.NUM_CLASSES = 9
     elif args.dataset == "kitti_train":
         cfg.TRAIN.DATASETS = ('kitti_train',)
-        cfg.MODEL.NUM_CLASSES = 10
+        cfg.MODEL.NUM_CLASSES = 11
     elif args.dataset == "kitti_train_180":
         cfg.TRAIN.DATASETS = ('kitti_train_180',)
-        cfg.MODEL.NUM_CLASSES = 10
+        cfg.MODEL.NUM_CLASSES = 11
     else:
         raise ValueError("Unexpected args.dataset: {}".format(args.dataset))
 

@@ -24,16 +24,11 @@ def get_rpn_blob_names(is_training=True):
                     'rpn_labels_int32_wide_fpn' + str(lvl),
                     'rpn_bbox_targets_wide_fpn' + str(lvl),
                     'rpn_bbox_inside_weights_wide_fpn' + str(lvl),
-                    'rpn_bbox_outside_weights_wide_fpn' + str(lvl)
-                ]
+                    'rpn_bbox_outside_weights_wide_fpn' + str(lvl)]
         else:
             # Single level RPN blobs
-            blob_names += [
-                'rpn_labels_int32_wide',
-                'rpn_bbox_targets_wide',
-                'rpn_bbox_inside_weights_wide',
-                'rpn_bbox_outside_weights_wide'
-            ]
+            blob_names += ['rpn_labels_int32_wide', 'rpn_bbox_targets_wide', 'rpn_bbox_inside_weights_wide',
+                           'rpn_bbox_outside_weights_wide']
     return blob_names
 
 

@@ -162,15 +162,16 @@ def load_ckpt(model, ckpt):
     else:
         invalid_keys = ['Box_Outs.cls_score.weight', 'Box_Outs.cls_score.bias',
                         'Box_Outs.bbox_pred.weight', 'Box_Outs.bbox_pred.bias', 'Mask_Outs.classify.weight',
-                        'Mask_Outs.classify.bias']
+                        'Mask_Outs.classify.bias', 'RPN.FPN_RPN_cls_score.weight', 'RPN.FPN_RPN_cls_score.bias',
+                        'RPN.FPN_RPN_bbox_pred.weight', 'RPN.FPN_RPN_bbox_pred.bias']
         for name in ckpt:
             if name in invalid_keys:
-                print(name)
                 continue
             else:
                 state_dict[name] = ckpt[name]
 
     model.load_state_dict(state_dict, strict=False)
+    # print(state_dict['Mask_Outs.classify.weight'].shape, state_dict['Box_Outs.cls_score.weight'].shape)
 
 
 def get_group_gn(dim):

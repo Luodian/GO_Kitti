@@ -114,10 +114,10 @@ if __name__ == '__main__':
         cfg.MODEL.NUM_CLASSES = 38
     elif args.dataset == "kitti_test":
         cfg.TEST.DATASETS = ('kitti_test',)
-        cfg.MODEL.NUM_CLASSES = 10
+        cfg.MODEL.NUM_CLASSES = 11
     elif args.dataset == "kitti_test_20":
         cfg.TEST.DATASETS = ('kitti_test_20',)
-        cfg.MODEL.NUM_CLASSES = 10
+        cfg.MODEL.NUM_CLASSES = 11
     else:  # For subprocess call
         assert cfg.TEST.DATASETS, 'cfg.TEST.DATASETS shouldn\'t be empty'
     assert_and_infer_cfg()
