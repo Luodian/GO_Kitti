@@ -234,8 +234,7 @@ def test_net_on_dataset(
         exit(0)
     # start to output submit format files and use ann['annotations'] to evaluate the metrics.
     else:
-        results = task_evaluation.evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir, images_path,
-                                               method_name)
+        results = task_evaluation.evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir)
         return results
 
 

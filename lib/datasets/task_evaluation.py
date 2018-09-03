@@ -30,58 +30,57 @@ Results are stored in an OrderedDict with the following nested structure:
 <val> is a floating point number
 """
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
+from collections import OrderedDict
 import logging
 import os
 import pprint
-from collections import OrderedDict
 
+from core.config import cfg
+from utils.logging import send_email
 import datasets.cityscapes_json_dataset_evaluator as cs_json_dataset_evaluator
 import datasets.json_dataset_evaluator as json_dataset_evaluator
 import datasets.voc_dataset_evaluator as voc_dataset_evaluator
-from core.config import cfg
-from utils.logging import send_email
 
 logger = logging.getLogger(__name__)
 
 
-def evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir, images_path, method_name,
-                 use_matlab=False):
+def evaluate_all(
+    dataset, all_boxes, all_segms, all_keyps, output_dir, use_matlab=False
+):
     """Evaluate "all" tasks, where "all" includes box detection, instance
     segmentation, and keypoint detection.
     """
-    # all_results = evaluate_boxes(
-    #     dataset, all_boxes, output_dir, use_matlab=use_matlab
-    # )
+    all_results = evaluate_boxes(
+        dataset, all_boxes, output_dir, use_matlab=use_matlab
+    )
     logger.info('Evaluating bounding boxes is done!')
     if cfg.MODEL.MASK_ON:
-        results = evaluate_masks(dataset, all_boxes, all_segms, output_dir, images_path, method_name)
-        # all_results[dataset.name].update(results[dataset.name])
+        results = evaluate_masks(dataset, all_boxes, all_segms, output_dir)
+        all_results[dataset.name].update(results[dataset.name])
         logger.info('Evaluating segmentations is done!')
-
     if cfg.MODEL.KEYPOINTS_ON:
         results = evaluate_keypoints(dataset, all_boxes, all_keyps, output_dir)
-        # all_results[dataset.name].update(results[dataset.name])
+        all_results[dataset.name].update(results[dataset.name])
         logger.info('Evaluating keypoints is done!')
-    # if cfg.INFER_SUBMIT_ONLY:
-    #     print ("Inferenec all done.")
-    #     exit()
-    return results
+    return all_results
 
 
 def evaluate_boxes(dataset, all_boxes, output_dir, use_matlab=False):
     """Evaluate bounding box detection."""
     logger.info('Evaluating detections')
     not_comp = not cfg.TEST.COMPETITION_MODE
-    print(dataset.name)
     if _use_json_dataset_evaluator(dataset):
         coco_eval = json_dataset_evaluator.evaluate_boxes(
             dataset, all_boxes, output_dir, use_salt=not_comp, cleanup=not_comp
         )
         box_results = _coco_eval_to_box_results(coco_eval)
     elif _use_cityscapes_evaluator(dataset):
-        logger.warning('Cityscapes bbox evaluated using COCO metrics/conversions')
+        logger.warn('Cityscapes bbox evaluated using COCO metrics/conversions')
         coco_eval = json_dataset_evaluator.evaluate_boxes(
             dataset, all_boxes, output_dir, use_salt=not_comp, cleanup=not_comp
         )
@@ -100,7 +99,7 @@ def evaluate_boxes(dataset, all_boxes, output_dir, use_matlab=False):
     return OrderedDict([(dataset.name, box_results)])
 
 
-def evaluate_masks(dataset, all_boxes, all_segms, output_dir, images_path, method_name):
+def evaluate_masks(dataset, all_boxes, all_segms, output_dir):
     """Evaluate instance segmentation."""
     logger.info('Evaluating segmentations')
     not_comp = not cfg.TEST.COMPETITION_MODE
@@ -325,63 +324,63 @@ def _cs_eval_to_mask_results(cs_eval):
 def _empty_box_results():
     return OrderedDict({
         'box':
-            OrderedDict(
-                [
-                    ('AP', -1),
-                    ('AP50', -1),
-                    ('AP75', -1),
-                    ('APs', -1),
-                    ('APm', -1),
-                    ('APl', -1),
-                ]
-            )
+        OrderedDict(
+            [
+                ('AP', -1),
+                ('AP50', -1),
+                ('AP75', -1),
+                ('APs', -1),
+                ('APm', -1),
+                ('APl', -1),
+            ]
+        )
     })
 
 
 def _empty_mask_results():
     return OrderedDict({
         'mask':
-            OrderedDict(
-                [
-                    ('AP', -1),
-                    ('AP50', -1),
-                    ('AP75', -1),
-                    ('APs', -1),
-                    ('APm', -1),
-                    ('APl', -1),
-                ]
-            )
+        OrderedDict(
+            [
+                ('AP', -1),
+                ('AP50', -1),
+                ('AP75', -1),
+                ('APs', -1),
+                ('APm', -1),
+                ('APl', -1),
+            ]
+        )
     })
 
 
 def _empty_keypoint_results():
     return OrderedDict({
         'keypoint':
-            OrderedDict(
-                [
-                    ('AP', -1),
-                    ('AP50', -1),
-                    ('AP75', -1),
-                    ('APm', -1),
-                    ('APl', -1),
-                ]
-            )
+        OrderedDict(
+            [
+                ('AP', -1),
+                ('AP50', -1),
+                ('AP75', -1),
+                ('APm', -1),
+                ('APl', -1),
+            ]
+        )
     })
 
 
 def _empty_box_proposal_results():
     return OrderedDict({
         'box_proposal':
-            OrderedDict(
-                [
-                    ('AR@100', -1),
-                    ('ARs@100', -1),
-                    ('ARm@100', -1),
-                    ('ARl@100', -1),
-                    ('AR@1000', -1),
-                    ('ARs@1000', -1),
-                    ('ARm@1000', -1),
-                    ('ARl@1000', -1),
-                ]
-            )
+        OrderedDict(
+            [
+                ('AR@100', -1),
+                ('ARs@100', -1),
+                ('ARm@100', -1),
+                ('ARl@100', -1),
+                ('AR@1000', -1),
+                ('ARs@1000', -1),
+                ('ARm@1000', -1),
+                ('ARl@1000', -1),
+            ]
+        )
     })
