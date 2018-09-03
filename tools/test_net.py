@@ -103,17 +103,17 @@ if __name__ == '__main__':
     if args.dataset == "coco2017_20pct":
         cfg.TEST.DATASETS = ('coco_2017_val_20pct',)
         cfg.MODEL.NUM_CLASSES = 38
-    elif args.dataset == "kitti_test_4imgs":
-        cfg.TEST.DATASETS = ('kitti_test_4imgs',)
-        cfg.MODEL.NUM_CLASSES = 10
+    elif args.dataset == "coco_kitti_test_4imgs":
+        cfg.TEST.DATASETS = ('coco_kitti_test_4imgs',)
+        cfg.MODEL.NUM_CLASSES = 11
     elif args.dataset == "coco_2017_test":
         cfg.TEST.DATASETS = ('coco_2017_test',)
         cfg.MODEL.NUM_CLASSES = 38
     elif args.dataset == "coco_2017_val":
         cfg.TEST.DATASETS = ('coco_2017_val',)
         cfg.MODEL.NUM_CLASSES = 38
-    elif args.dataset == "coco_kitti_val":
-        cfg.TEST.DATASETS = ('coco_kitti_val',)
+    elif args.dataset == "coco_kitti_test":
+        cfg.TEST.DATASETS = ('coco_kitti_test',)
         cfg.MODEL.NUM_CLASSES = 11
     elif args.dataset == "coco_kitti_val_20":
         cfg.TEST.DATASETS = ('coco_kitti_val_20',)

@@ -161,9 +161,13 @@ def load_ckpt(model, ckpt):
             state_dict[name] = ckpt[name]
     else:
         invalid_keys = ['Box_Outs.cls_score.weight', 'Box_Outs.cls_score.bias',
-                        'Box_Outs.bbox_pred.weight', 'Box_Outs.bbox_pred.bias', 'Mask_Outs.classify.weight',
-                        'Mask_Outs.classify.bias', 'RPN.FPN_RPN_cls_score.weight', 'RPN.FPN_RPN_cls_score.bias',
-                        'RPN.FPN_RPN_bbox_pred.weight', 'RPN.FPN_RPN_bbox_pred.bias']
+                        'Box_Outs.bbox_pred.weight', 'Box_Outs.bbox_pred.bias',
+                        'Mask_Outs.classify.weight', 'Mask_Outs.classify.bias']
+        # invalid_keys = ['Box_Outs.cls_score.weight', 'Box_Outs.cls_score.bias',
+        #                 'Box_Outs.bbox_pred.weight', 'Box_Outs.bbox_pred.bias',
+        #                 'Mask_Outs.classify.weight', 'Mask_Outs.classify.bias',
+        #                 'RPN.FPN_RPN_cls_score.weight', 'RPN.FPN_RPN_cls_score.bias',
+        #                 'RPN.FPN_RPN_bbox_pred.weight', 'RPN.FPN_RPN_bbox_pred.bias']
         for name in ckpt:
             if name in invalid_keys:
                 continue

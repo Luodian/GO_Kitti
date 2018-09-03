@@ -70,7 +70,7 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/annotations/training_180.json'
     },
-    'coco_kitti_val': {
+    'coco_kitti_test': {
         IM_DIR:
             _DATA_DIR + '/testing/image_2',
         ANN_FN:
@@ -83,7 +83,7 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/annotations/testing_20.json'
     },
-    'kitti_test_4imgs': {
+    'coco_kitti_test_4imgs': {
         IM_DIR:
             _DATA_DIR + '/testing/image_2',
         ANN_FN:
