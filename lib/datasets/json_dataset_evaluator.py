@@ -15,40 +15,42 @@
 
 """Functions for evaluating results computed for a json dataset."""
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+from __future__ import unicode_literals
 
 import json
 import logging
+import numpy as np
 import os
 import uuid
 
-import numpy as np
-import utils.boxes as box_utils
-from core.config import cfg
 from pycocotools.cocoeval import COCOeval
+
+from core.config import cfg
 from utils.io import save_object
+import utils.boxes as box_utils
 
 logger = logging.getLogger(__name__)
 
 
 def evaluate_masks(
-        json_dataset,
-        all_boxes,
-        all_segms,
-        output_dir,
-        images_path,
-        method_name,
-        use_salt=True,
-        cleanup=False):
-    # res_file = os.path.join (
-    # 	output_dir , 'segmentations_' + json_dataset.name + '_results'
-    # )
-    res_file = os.path.join(output_dir, 'segmentations_' + method_name + '_results')
-
+    json_dataset,
+    all_boxes,
+    all_segms,
+    output_dir,
+    use_salt=True,
+    cleanup=False
+):
+    res_file = os.path.join(
+        output_dir, 'segmentations_' + json_dataset.name + '_results'
+    )
     if use_salt:
         res_file += '_{}'.format(str(uuid.uuid4()))
     res_file += '.json'
-    _write_coco_segms_results_file(json_dataset, all_boxes, all_segms, res_file)
+    _write_coco_segms_results_file(
+        json_dataset, all_boxes, all_segms, res_file)
     # Only do evaluation on non-test sets (annotations are undisclosed on test)
     if json_dataset.name.find('test') == -1:
         coco_eval = _do_segmentation_eval(json_dataset, res_file, output_dir)
@@ -61,7 +63,7 @@ def evaluate_masks(
 
 
 def _write_coco_segms_results_file(
-        json_dataset, all_boxes, all_segms, res_file
+    json_dataset, all_boxes, all_segms, res_file
 ):
     # [{"image_id": 42,
     #   "category_id": 18,
@@ -122,7 +124,7 @@ def _do_segmentation_eval(json_dataset, res_file, output_dir):
 
 
 def evaluate_boxes(
-        json_dataset, all_boxes, output_dir, use_salt=True, cleanup=False
+    json_dataset, all_boxes, output_dir, use_salt=True, cleanup=False
 ):
     res_file = os.path.join(
         output_dir, 'bbox_' + json_dataset.name + '_results'
@@ -224,7 +226,7 @@ def _log_detection_eval_metrics(json_dataset, coco_eval):
             continue
         # minus 1 because of __background__
         precision = coco_eval.eval['precision'][
-                    ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
+            ind_lo:(ind_hi + 1), :, cls_ind - 1, 0, 2]
         ap = np.mean(precision[precision > -1])
         logger.info('{:.1f}'.format(100 * ap))
     logger.info('~~~~ Summary metrics ~~~~')
@@ -232,7 +234,7 @@ def _log_detection_eval_metrics(json_dataset, coco_eval):
 
 
 def evaluate_box_proposals(
-        json_dataset, roidb, thresholds=None, area='all', limit=None
+    json_dataset, roidb, thresholds=None, area='all', limit=None
 ):
     """Evaluate detection proposal recall metrics. This function is a much
     faster alternative to the official COCO API recall evaluation code. However,
@@ -250,14 +252,14 @@ def evaluate_box_proposals(
         '256-512': 6,
         '512-inf': 7}
     area_ranges = [
-        [0 ** 2, 1e5 ** 2],  # all
-        [0 ** 2, 32 ** 2],  # small
-        [32 ** 2, 96 ** 2],  # medium
-        [96 ** 2, 1e5 ** 2],  # large
-        [96 ** 2, 128 ** 2],  # 96-128
-        [128 ** 2, 256 ** 2],  # 128-256
-        [256 ** 2, 512 ** 2],  # 256-512
-        [512 ** 2, 1e5 ** 2]]  # 512-inf
+        [0**2, 1e5**2],    # all
+        [0**2, 32**2],     # small
+        [32**2, 96**2],    # medium
+        [96**2, 1e5**2],   # large
+        [96**2, 128**2],   # 96-128
+        [128**2, 256**2],  # 128-256
+        [256**2, 512**2],  # 256-512
+        [512**2, 1e5**2]]  # 512-inf
     assert area in areas, 'Unknown area range: {}'.format(area)
     area_range = area_ranges[areas[area]]
     gt_overlaps = np.zeros(0)
@@ -316,12 +318,12 @@ def evaluate_box_proposals(
 
 
 def evaluate_keypoints(
-        json_dataset,
-        all_boxes,
-        all_keypoints,
-        output_dir,
-        use_salt=True,
-        cleanup=False
+    json_dataset,
+    all_boxes,
+    all_keypoints,
+    output_dir,
+    use_salt=True,
+    cleanup=False
 ):
     res_file = os.path.join(
         output_dir, 'keypoints_' + json_dataset.name + '_results'
@@ -343,7 +345,7 @@ def evaluate_keypoints(
 
 
 def _write_coco_keypoint_results_file(
-        json_dataset, all_boxes, all_keypoints, res_file
+    json_dataset, all_boxes, all_keypoints, res_file
 ):
     results = []
     for cls_ind, cls in enumerate(json_dataset.classes):

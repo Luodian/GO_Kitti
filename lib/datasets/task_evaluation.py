@@ -64,9 +64,9 @@ def evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir, images_pa
         results = evaluate_keypoints(dataset, all_boxes, all_keyps, output_dir)
         # all_results[dataset.name].update(results[dataset.name])
         logger.info('Evaluating keypoints is done!')
-    if cfg.INFER_SUBMIT_ONLY:
-        print ("Inferenec all done.")
-        exit()
+    # if cfg.INFER_SUBMIT_ONLY:
+    #     print ("Inferenec all done.")
+    #     exit()
     return results
 
 
@@ -110,8 +110,6 @@ def evaluate_masks(dataset, all_boxes, all_segms, output_dir, images_path, metho
             all_boxes,
             all_segms,
             output_dir,
-            images_path,
-            method_name,
             use_salt=not_comp,
             cleanup=not_comp
         )
