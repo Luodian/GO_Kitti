@@ -178,7 +178,7 @@ def test_net_on_dataset(
     print(method_name)
     if args.infer_test:
         kitti_test_num = 200
-        kitti_cls_num = 10
+        kitti_cls_num = 11
         kitti_dataset_name = 'Kitti2015'
         pred_list_name = 'pred_list'
         pred_img_name = 'pred_img'
