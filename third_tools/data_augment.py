@@ -1,84 +1,187 @@
+""" Perform the data statistics of the train set"""
+# coding:utf-8
+import os, sys
+import json
+from collections import defaultdict
+import cv2
+import numpy as np
 import imgaug as ia
 from imgaug import augmenters as iaa
-import numpy as np
+from pycocotools.coco import COCO
+import gc
+import copy
 
-# random example images
-images = np.random.randint(0, 255, (16, 128, 128, 3), dtype=np.uint8)
 
-# Sometimes(0.5, ...) applies the given augmenter in 50% of all cases,
-# e.g. Sometimes(0.5, GaussianBlur(0.3)) would blur roughly every second image.
-sometimes = lambda aug: iaa.Sometimes(0.5, aug)
+AVG = 100
 
-# Define our sequence of augmentation steps that will be applied to every image
-# All augmenters with per_channel=0.5 will sample one value _per image_
-# in 50% of all cases. In all other cases they will sample new values
-# _per channel_.
-seq = iaa.Sequential(
-    [
-        # apply the following augmenters to most images
-        iaa.Fliplr(0.5), # horizontally flip 50% of all images
-        iaa.Flipud(0.2), # vertically flip 20% of all images
-        # crop images by -5% to 10% of their height/width
-        sometimes(iaa.CropAndPad(
-            percent=(-0.05, 0.1),
-            pad_mode=ia.ALL,
-            pad_cval=(0, 255)
-        )),
-        sometimes(iaa.Affine(
-            scale={"x": (0.8, 1.2), "y": (0.8, 1.2)}, # scale images to 80-120% of their size, individually per axis
-            translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)}, # translate by -20 to +20 percent (per axis)
-            rotate=(-45, 45), # rotate by -45 to +45 degrees
-            shear=(-16, 16), # shear by -16 to +16 degrees
-            order=[0, 1], # use nearest neighbour or bilinear interpolation (fast)
-            cval=(0, 255), # if mode is constant, use a cval between 0 and 255
-            mode=ia.ALL # use any of scikit-image's warping modes (see 2nd image from the top for examples)
-        )),
-        # execute 0 to 5 of the following (less important) augmenters per image
-        # don't execute all of them, as that would often be way too strong
-        iaa.SomeOf((0, 5),
-            [
-                sometimes(iaa.Superpixels(p_replace=(0, 1.0), n_segments=(20, 200))), # convert images into their superpixel representation
-                iaa.OneOf([
-                    iaa.GaussianBlur((0, 3.0)), # blur images with a sigma between 0 and 3.0
-                    iaa.AverageBlur(k=(2, 7)), # blur image using local means with kernel sizes between 2 and 7
-                    iaa.MedianBlur(k=(3, 11)), # blur image using local medians with kernel sizes between 2 and 7
-                ]),
-                iaa.Sharpen(alpha=(0, 1.0), lightness=(0.75, 1.5)), # sharpen images
-                iaa.Emboss(alpha=(0, 1.0), strength=(0, 2.0)), # emboss images
-                # search either for all edges or for directed edges,
-                # blend the result with the original image using a blobby mask
-                iaa.SimplexNoiseAlpha(iaa.OneOf([
-                    iaa.EdgeDetect(alpha=(0.5, 1.0)),
-                    iaa.DirectedEdgeDetect(alpha=(0.5, 1.0), direction=(0.0, 1.0)),
-                ])),
-                iaa.AdditiveGaussianNoise(loc=0, scale=(0.0, 0.05*255), per_channel=0.5), # add gaussian noise to images
-                iaa.OneOf([
-                    iaa.Dropout((0.01, 0.1), per_channel=0.5), # randomly remove up to 10% of the pixels
-                    iaa.CoarseDropout((0.03, 0.15), size_percent=(0.02, 0.05), per_channel=0.2),
-                ]),
-                iaa.Invert(0.05, per_channel=True), # invert color channels
-                iaa.Add((-10, 10), per_channel=0.5), # change brightness of images (by -10 to 10 of original value)
-                iaa.AddToHueAndSaturation((-20, 20)), # change hue and saturation
-                # either change the brightness of the whole image (sometimes
-                # per channel) or change the brightness of subareas
-                iaa.OneOf([
-                    iaa.Multiply((0.5, 1.5), per_channel=0.5),
-                    iaa.FrequencyNoiseAlpha(
-                        exponent=(-4, 0),
-                        first=iaa.Multiply((0.5, 1.5), per_channel=True),
-                        second=iaa.ContrastNormalization((0.5, 2.0))
-                    )
-                ]),
-                iaa.ContrastNormalization((0.5, 2.0), per_channel=0.5), # improve or worsen the contrast
-                iaa.Grayscale(alpha=(0.0, 1.0)),
-                sometimes(iaa.ElasticTransformation(alpha=(0.5, 3.5), sigma=0.25)), # move pixels locally around (with random strengths)
-                sometimes(iaa.PiecewiseAffine(scale=(0.01, 0.05))), # sometimes move parts of the image around
-                sometimes(iaa.PerspectiveTransform(scale=(0.01, 0.1)))
-            ],
-            random_order=True
-        )
-    ],
-    random_order=True
-)
+pro_root = os.path.abspath('..')
+os.chdir(pro_root)
 
-images_aug = seq.augment_images(images)
+MAX_NUM_PER_CLS = 10000
+
+
+def gen_anno_info(anno_id, category_id, image_id, area, segmentation, bbox, iscrowd=0):
+    annotation_info = {
+        'id': anno_id,
+        'category_id': category_id,
+        'image_id': image_id,
+        'area': area,
+        'segmentation': segmentation,
+        'bbox': bbox,
+        'iscrowd': iscrowd}
+
+    return annotation_info
+
+
+def gen_image_info(chip_id, image_name, image, save_dir):
+    chip_name = image_name.replace('.jpg', '_{}.jpg'.format(chip_id))
+    image_info = {
+        "id": chip_id,
+        "file_name": chip_name,
+        "width": image.size[0],
+        "height": image.size[1]
+        # "date_captured": date_captured,
+        # "license": license_id,
+        # "coco_url": coco_url,
+        # "flickr_url": flickr_url
+    }
+    return image_info
+
+def statistic(path_to_ann):
+    train_set = json.load(open(path_to_ann,  'r'))
+    annotations = train_set['annotations']
+    images = train_set['images']
+    cls_to_img_ids = defaultdict(list)
+    id_to_img = defaultdict(str)
+
+    for img in images:
+        id_to_img[img['id']] = img['file_name']
+    for anno in annotations:
+        cls_to_img_ids[anno['category_id']].append(anno['image_id'])
+    return cls_to_img_ids, id_to_img
+
+
+def aug_seq():
+    sometimes = lambda aug: iaa.Sometimes(0.5, aug)
+    seq = iaa.Sequential([sometimes(iaa.OneOf([
+                              iaa.GaussianBlur((0, 2.0)),  # blur images with a sigma between 0 and 3.0
+                              iaa.AverageBlur(k=(0.5, 3)),
+                              # blur image using local means with kernel sizes between 0.5 and 3
+                              iaa.MedianBlur(k=(1, 5)),
+                              # blur image using local medians with kernel sizes between 1 and 4
+                          ])),
+                          sometimes(iaa.OneOf([
+                              iaa.Multiply((0.8, 1.2)),
+                              iaa.Add((-35, 25)),
+                          ])),
+                          sometimes(iaa.ContrastNormalization((0.85, 1.60))),
+                          ], random_order=True)
+    return seq
+
+
+def save_data(annFile):
+    annFile_new = annFile.replace('.json', '_new.json')
+    with open(annFile_new, 'w') as af:
+        json.dump(anno_json, af)
+
+
+def add_annotation(period, image_id, per, cur_max_img_id, cur_max_ann_id, coco):
+
+    global anno_json
+    anno_ids_to_img = coco.getAnnIds(imgIds=image_id)
+    for i in range(period):
+        image_info = copy.deepcopy(coco.imgs[image_id])
+        image_info['id'] = cur_max_img_id+i+1
+        image_info['file_name'] = image_info['file_name'].replace('.jpg', '_aug_{}.jpg'.format(per*period+i))
+        anno_json['images'].append(image_info)
+        for id, anno_id in enumerate(anno_ids_to_img):
+            anno = copy.deepcopy(coco.anns[anno_id])
+            anno['id'] = cur_max_ann_id + i*period+ id +1
+            anno['image_id'] = image_info['id']
+            anno_json['annotations'].append(anno)
+    cur_max_img_id += period
+    cur_max_ann_id = cur_max_ann_id + period *len(anno_ids_to_img)
+    return cur_max_img_id, cur_max_ann_id
+
+
+def get_max_id(item):
+    max_id = 0
+    for key, _ in item.items():
+        if key > max_id:
+            max_id = key
+    return max_id
+
+
+# image Augment
+def imageaug(coco, image_dir, save_dir, ann_json):
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+
+    catToImgs = coco.catToImgs
+    imgToAnns = coco.imgToAnns
+    images = coco.imgs
+    cats = coco.cats
+
+    cur_max_ann_id = get_max_id(coco.anns)
+    cur_max_img_id = get_max_id(images)
+
+    catToImgLst = []
+    for cat, imgs in catToImgs.items():
+        catToImgLst.append(len(imgs))
+
+    sort_id = np.argsort(catToImgLst)
+    sortedCatToImgLst = np.sort(catToImgLst)
+
+    most_cat_ids = sort_id[-3:]
+    most_img_ids= []
+    for most_id in most_cat_ids:
+        most_img_ids.extend(coco.getImgIds(catIds = most_id))
+    most_img_ids  = list(set(most_img_ids))
+
+    min_cat_id = sort_id[0]
+    min_cat_cnt = sortedCatToImgLst[0]
+
+    avg_cnt = float(np.sum(catToImgLst))/len(catToImgLst)
+
+    aug_time = avg_cnt/min_cat_cnt
+
+    to_process_img_ids = []
+    min_cat_ids = coco.getImgIds(catIds=min_cat_id)
+    for img_id in min_cat_ids:
+        if img_id not in most_img_ids:
+            to_process_img_ids.append(img_id)
+    aug_time = int(aug_time * (len(min_cat_ids)/float(len(to_process_img_ids))))
+
+    period = 300
+    for img_id in to_process_img_ids:
+        img_name = images[img_id]['file_name']
+        img_path = os.path.join(image_dir, img_name)
+        im = cv2.imread(img_path)
+        h, w = im.shape[:2]
+        im = im.reshape(1, h, w, 3)
+        for per in range(int(aug_time/period+1)):
+            ims = im.repeat(period, axis=0)
+            seq = aug_seq()
+            ims_aug = seq.augment_images(ims)
+            for i in range(len(ims_aug)):
+                aug_image_file = img_name.replace('.jpg', '_aug_{}.jpg'.format(per*period+i))
+                save_path = os.path.join(save_dir, aug_image_file)
+                cv2.imwrite(save_path, ims_aug[i])
+            cur_max_img_id, cur_max_ann_id=add_annotation(period, img_id, per, cur_max_img_id, cur_max_ann_id, coco)
+            del ims_aug, ims
+            gc.collect()
+        del im
+        gc.collect()
+
+
+if __name__ == "__main__":
+    task = 'train'
+    annFile = r'/nfs/project/data/mapillary/annotation/{}ing.json'.format(task)
+    path_to_statistics = r'statistic/data_mapillary/'
+    image_dir = '/nfs/project/xjpan/Mapillary-Team/data/mapillary/images/{}'.format(task)
+    save_dir = '/nfs/project/xjpan/Mapillary-Team/data/mapillary/images/aug'
+
+    anno_json = json.load(open(annFile))
+    coco = COCO(annFile)
+    imageaug(coco, image_dir, save_dir, anno_json)
+    save_data(annFile)

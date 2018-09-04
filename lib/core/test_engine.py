@@ -213,7 +213,8 @@ def test_net_on_dataset(
                             mask = np.array(mask_util.decode(specific_item), dtype=np.float32)
                             instances_graph = np.zeros((im.shape[0], im.shape[1]))
                             instances_graph[mask == 1] = 255
-                            instance_save_name = "{}_{}_{:0>3d}.png".format(kitti_dataset_name, test_image_list[img_id],
+                            instance_save_name = "{}_{}_{:0>3d}.png".format(kitti_dataset_name,
+                                                                            test_image_list[img_id][:-4],
                                                                             ist_cnt)
                             print(instance_save_name)
                             instance_save_path = os.path.join(pred_img_path, instance_save_name)
@@ -222,9 +223,10 @@ def test_net_on_dataset(
 
                             # write text info
                             # ../pred_img/Kitti2015_000000_10_000.png 026 0.976347
-                            instance_info_To_Text = "../pred_img/{} {:0>3d} {}\n".format(instance_save_name, cls_id + 24,
-                                                                                       all_boxes[cls_id][img_id][
-                                                                                           ist_id][4])
+                            instance_info_To_Text = "../pred_img/{} {:0>3d} {}\n".format(instance_save_name,
+                                                                                         cls_id + 24,
+                                                                                         all_boxes[cls_id][img_id][
+                                                                                             ist_id][4])
                             ist_cnt += 1
                             file.writelines(instance_info_To_Text)
 
