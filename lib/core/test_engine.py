@@ -201,7 +201,7 @@ def test_net_on_dataset(
         for img_id in range(kitti_test_num):
             im = cv2.imread(os.path.join(test_image_path, test_image_list[img_id]))
             ist_cnt = 0
-            text_save_name = "{}_{}.txt".format(kitti_dataset_name, test_image_list[img_id][:-4])
+            text_save_name = "{}.txt".format(test_image_list[img_id][:-4])
             text_save_path = os.path.join(pred_list_path, text_save_name)
             file = open(text_save_path, "w")
             for cls_id in range(kitti_cls_num):
@@ -213,9 +213,9 @@ def test_net_on_dataset(
                             mask = np.array(mask_util.decode(specific_item), dtype=np.float32)
                             instances_graph = np.zeros((im.shape[0], im.shape[1]))
                             instances_graph[mask == 1] = 255
-                            instance_save_name = "{}_{}_{:0>3d}.png".format(kitti_dataset_name,
-                                                                            test_image_list[img_id][:-4],
-                                                                            ist_cnt)
+                            instance_save_name = "{}_{:0>3d}.png".format(
+                                test_image_list[img_id][:-4],
+                                ist_cnt)
                             print(instance_save_name)
                             instance_save_path = os.path.join(pred_img_path, instance_save_name)
                             import scipy.misc as msc

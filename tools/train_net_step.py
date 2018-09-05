@@ -168,9 +168,9 @@ def main():
     elif args.dataset == "coco2014":
         cfg.TRAIN.DATASETS = ('coco_2014_train',)
         cfg.MODEL.NUM_CLASSES = 81
-    elif args.dataset == "apollo_train":
-        cfg.TRAIN.DATASETS = ('apollo_train',)
-        cfg.MODEL.NUM_CLASSES = 9
+    elif args.dataset == "kitti_train_aug":
+        cfg.TRAIN.DATASETS = ('kitti_train_aug',)
+        cfg.MODEL.NUM_CLASSES = 11
     elif args.dataset == "kitti_train":
         cfg.TRAIN.DATASETS = ('kitti_train',)
         cfg.MODEL.NUM_CLASSES = 11

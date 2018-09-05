@@ -52,11 +52,11 @@ DATASETS = {
       ANN_FN:
           _DATA_DIR + '/mapillary/annotations/mapillary_train_val_aug_new.json'
     },
-    'apollo_train': {
+    'kitti_train_aug': {
         IM_DIR:
-            _DATA_DIR + '/apolloscape/images',
+            _DATA_DIR + '/aug',
         ANN_FN:
-            _DATA_DIR + '/apolloscape/annotations/training.json'
+            _DATA_DIR + '/annotations/training_new.json'
     },
     'kitti_train': {
         IM_DIR:
