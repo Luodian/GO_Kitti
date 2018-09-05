@@ -35,5 +35,10 @@ def anlyze_single_image():
                 instance_label_id_mask = np.array(instance_label_id_mask, dtype=np.uint8)
 
 
-for i in range(1,200):
-    print ("{:0>3d}".format(i))
+import os
+
+text_lists = os.listdir("/nfs/project/libo_i/go_kitti/test_output/full_test_submit_on_200/pred_list")
+img_lists = os.listdir("/nfs/project/libo_i/go_kitti/test_output/full_test_submit_on_200/pred_img")
+
+print (len(text_lists))
+print (len(img_lists))

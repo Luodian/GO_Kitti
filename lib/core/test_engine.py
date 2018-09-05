@@ -221,10 +221,10 @@ def test_net_on_dataset(
                             import scipy.misc as msc
                             msc.imsave(instance_save_path, instances_graph)
 
-                            # write text info
+                            # write text info like that
                             # ../pred_img/Kitti2015_000000_10_000.png 026 0.976347
                             instance_info_To_Text = "../pred_img/{} {:0>3d} {}\n".format(instance_save_name,
-                                                                                         cls_id + 24,
+                                                                                         cls_id + 23,
                                                                                          all_boxes[cls_id][img_id][
                                                                                              ist_id][4])
                             ist_cnt += 1
