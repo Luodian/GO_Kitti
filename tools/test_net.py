@@ -49,10 +49,6 @@ def parse_args():
         help='load_json')
 
     parser.add_argument(
-        '--method',
-        help='method')
-
-    parser.add_argument(
         '--infer_submission', help='whether if we only infer test', action='store_true')
 
     parser.add_argument(

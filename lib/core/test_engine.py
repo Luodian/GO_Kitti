@@ -174,16 +174,19 @@ def test_net_on_dataset(
     if args.save_json:
         import json
         import copy
-        output_json = { 'all_boxes':[],
-                        'all_segms':[],
-                    }
+        output_json = {'all_boxes': [],
+                       'all_segms': [],
+                       }
         all_box = copy.deepcopy(all_boxes)
         for cls_id in range(1, len(all_boxes)):
             for imgid in range(len(all_boxes[cls_id])):
                 all_box[cls_id][imgid] = all_box[cls_id][imgid].tolist()
         output_json['all_boxes'] = all_box
         output_json['all_segms'] = all_segms
-        json_path = args.save_json_path
+        if os.path.exists(args.save_json_path) is False:
+            os.makedirs(args.save_json_path)
+
+        json_path = os.path.join(args.save_json_path, args.method_name)
         print("Save {}".format(json_path))
         open(json_path, 'w').write(json.dumps(output_json))
 
