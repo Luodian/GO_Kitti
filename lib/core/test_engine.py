@@ -146,11 +146,12 @@ def test_net_on_dataset(
     dataset = JsonDataset(dataset_name)
     test_timer = Timer()
     test_timer.tic()
+
     # 如果ensemble json，跳过im_detect_all的模块
-    if cfg.ENSAMBLE_METRIC:
+    if args.load_json:
         import json
         # json_path = os.path.join(args.ensamble_path, 'ensamble.json')
-        json_path = args.ensamble_json_path
+        json_path = args.load_json_path
         # json_path = os.path.join("/".join(json_path.split('/')[:-1]), json_path.split('/')[-1].rstrip('/')+'_ensamble.json')
         print("Load json {}".format(json_path))
         ans_json = json.loads(open(json_path).read())
@@ -169,17 +170,32 @@ def test_net_on_dataset(
             )
     test_timer.toc()
 
+    # 将检测结果保存至json文件，方便后序ensemble
+    if args.save_json:
+        import json
+        import copy
+        output_json = { 'all_boxes':[],
+                        'all_segms':[],
+                    }
+        all_box = copy.deepcopy(all_boxes)
+        for cls_id in range(1, len(all_boxes)):
+            for imgid in range(len(all_boxes[cls_id])):
+                all_box[cls_id][imgid] = all_box[cls_id][imgid].tolist()
+        output_json['all_boxes'] = all_box
+        output_json['all_segms'] = all_segms
+        json_path = args.save_json_path
+        print("Save {}".format(json_path))
+        open(json_path, 'w').write(json.dumps(output_json))
+
     images_path = []
     for i in dataset.get_roidb():
         images_path.append(i['image'].split('/')[-1][:-4])
 
     logger.info('Total inference time: {:.3f}s'.format(test_timer.average_time))
-    method_name = args.method_name
-    print(method_name)
-    if args.infer_test:
+
+    if args.infer_submission:
         kitti_test_num = 200
         kitti_cls_num = 11
-        kitti_dataset_name = 'Kitti2015'
         pred_list_name = 'pred_list'
         pred_img_name = 'pred_img'
 
@@ -231,9 +247,6 @@ def test_net_on_dataset(
                             file.writelines(instance_info_To_Text)
 
             file.close()
-
-        # solid exit out.
-        exit(0)
     # start to output submit format files and use ann['annotations'] to evaluate the metrics.
     else:
         results = task_evaluation.evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir)

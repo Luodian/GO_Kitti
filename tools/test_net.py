@@ -33,15 +33,27 @@ def parse_args():
         '--load_detectron', help='path to the detectron weight pickle file')
 
     parser.add_argument(
-        '--ensamble_json_path',
+        '--load_json',
+        help='load_json', action='store_true')
+
+    parser.add_argument(
+        '--load_json_path',
         help='ensamble_json_path')
 
     parser.add_argument(
-        '--save_mid_json_path',
-        help='mid json path')
+        '--save_json',
+        help='load_json', action='store_true')
 
     parser.add_argument(
-        '--infer_test', help='whether if we only infer test', action='store_true')
+        '--save_json_path',
+        help='load_json')
+
+    parser.add_argument(
+        '--method',
+        help='method')
+
+    parser.add_argument(
+        '--infer_submission', help='whether if we only infer test', action='store_true')
 
     parser.add_argument(
         '--method', dest='method_name', help='path to the detectron weight pickle file')
@@ -109,9 +121,9 @@ if __name__ == '__main__':
     elif args.dataset == "coco_2017_test":
         cfg.TEST.DATASETS = ('coco_2017_test',)
         cfg.MODEL.NUM_CLASSES = 38
-    elif args.dataset == "coco_2017_val":
-        cfg.TEST.DATASETS = ('coco_2017_val',)
-        cfg.MODEL.NUM_CLASSES = 38
+    elif args.dataset == "coco_kitti_val":
+        cfg.TEST.DATASETS = ('coco_kitti_val',)
+        cfg.MODEL.NUM_CLASSES = 11
     elif args.dataset == "coco_kitti_test":
         cfg.TEST.DATASETS = ('coco_kitti_test',)
         cfg.MODEL.NUM_CLASSES = 11

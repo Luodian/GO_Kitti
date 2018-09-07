@@ -2,7 +2,7 @@ MODEL:
   TYPE: generalized_rcnn
   CONV_BODY: FPN.fpn_ResNet101_conv5_body
   FASTER_RCNN: True
-  NUM_CLASSES: 38
+  NUM_CLASSES: 11
   MASK_ON: True
 NUM_GPUS: 8
 SOLVER:
@@ -45,7 +45,8 @@ TRAIN:
 TEST:
   SCALE: 3000
   MAX_SIZE: 4000
-  NMS: 0.5
+  NMS: 0.1
+  DETECTIONS_PER_IM: 20
   BBOX_VOTE:
     ENABLED: True
     VOTE_TH: 0.9
