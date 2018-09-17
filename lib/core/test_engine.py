@@ -250,6 +250,7 @@ def test_net_on_dataset(
                             file.writelines(instance_info_To_Text)
 
             file.close()
+            exit(0)
     # start to output submit format files and use ann['annotations'] to evaluate the metrics.
     else:
         results = task_evaluation.evaluate_all(dataset, all_boxes, all_segms, all_keyps, output_dir)
