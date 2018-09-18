@@ -77,11 +77,35 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/annotations/training.json'
     },
-    'kitti_train_180': {
+    'kitti_train_180_part1': {
         IM_DIR:
             _DATA_DIR + '/training/image_2',
         ANN_FN:
-            _DATA_DIR + '/annotations/training_180.json'
+            _DATA_DIR + '/annotations/training_180_Part1.json'
+    },
+    'kitti_train_180_part2': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_180_Part2.json'
+    },
+    'kitti_train_180_part3': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_180_Part3.json'
+    },
+    'kitti_train_180_part4': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_180_Part4.json'
+    },
+    'kitti_train_180_part5': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_180_Part5.json'
     },
     'coco_kitti_val': {
         IM_DIR:
@@ -96,11 +120,35 @@ DATASETS = {
             _DATA_DIR + '/annotations/testing.json'
     },
     # 这个train的20imgs
-    'coco_kitti_val_20': {
+    'coco_kitti_val_20_part1': {
         IM_DIR:
             _DATA_DIR + '/training/image_2',
         ANN_FN:
-            _DATA_DIR + '/annotations/testing_20.json'
+            _DATA_DIR + '/annotations/training_20_Part1.json'
+    },
+    'coco_kitti_val_20_part2': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_20_Part2.json'
+    },
+    'coco_kitti_val_20_part3': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_20_Part3.json'
+    },
+    'coco_kitti_val_20_part4': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_20_Part4.json'
+    },
+    'coco_kitti_val_20_part5': {
+        IM_DIR:
+            _DATA_DIR + '/training/image_2',
+        ANN_FN:
+            _DATA_DIR + '/annotations/training_20_Part5.json'
     },
     'coco_kitti_test_4imgs': {
         IM_DIR:
@@ -111,23 +159,9 @@ DATASETS = {
     'mapillary_train_val':
     {
 	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/train_val',
+		    _DATA_DIR + '/mapillary/train_val/images',
 	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/mapillary_train_val_new.json'
-    },
-    'mapillary_train_20p':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/train',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/training_20p.json'
-    },
-    'mapillary_train_40p':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/train',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/training_40p.json'
+	        _DATA_DIR + '/mapillary/annotation/mapillary_train_val_new.json'
     },
     'coco_2017_test':
     {
@@ -142,38 +176,6 @@ DATASETS = {
 		    _DATA_DIR + '/mapillary/images/validations',
 	    ANN_FN:
 	        _DATA_DIR + '/mapillary/annotations/validation.json'
-    },
-    'coco_2017_val_4pic':
-    {
-        IM_DIR:
-            _DATA_DIR + '/mapillary/images/validations',
-        ANN_FN:
-            _DATA_DIR + '/mapillary/annotations/validation_4_image_only.json'
-    },
-    'cityscapes_fine_instanceonly_seg_train': {
-        IM_DIR:
-            _DATA_DIR + '/cityscapes/images',
-        ANN_FN:
-            _DATA_DIR + '/cityscapes/annotations/instancesonly_gtFine_train.json',
-        RAW_DIR:
-            _DATA_DIR + '/cityscapes/raw'
-    },
-    'cityscapes_fine_instanceonly_seg_val': {
-        IM_DIR:
-            _DATA_DIR + '/cityscapes/images',
-        # use filtered validation as there is an issue converting contours
-        ANN_FN:
-            _DATA_DIR + '/cityscapes/annotations/instancesonly_filtered_gtFine_val.json',
-        RAW_DIR:
-            _DATA_DIR + '/cityscapes/raw'
-    },
-    'cityscapes_fine_instanceonly_seg_test': {
-        IM_DIR:
-            _DATA_DIR + '/cityscapes/images',
-        ANN_FN:
-            _DATA_DIR + '/cityscapes/annotations/instancesonly_gtFine_test.json',
-        RAW_DIR:
-            _DATA_DIR + '/cityscapes/raw'
     },
     'coco_2014_train': {
         IM_DIR:
@@ -216,380 +218,5 @@ DATASETS = {
             _DATA_DIR + '/coco/images/train2017',
         ANN_FN:
             _DATA_DIR + '/coco/annotations/instances_train2017.json',
-    },
-    'coco_2017_val_20pct': {
-        IM_DIR:
-            _DATA_DIR + '/mapillary/images/validations',
-        ANN_FN:
-            _DATA_DIR + '/mapillary/annotations/validation_20p.json',
-    },
-    'coco_2017_20pct_no_ann': {
-        IM_DIR:
-            _DATA_DIR + '/mapillary/images/validations',
-        ANN_FN:
-            _DATA_DIR + '/mapillary/annotations/validation_20p_new.json',
-    },
-    # coco_2017_10pic_no_ann
-    'coco_2017_10pic_no_ann': {
-        IM_DIR:
-            _DATA_DIR + '/mapillary/images/validations',
-        ANN_FN:
-            _DATA_DIR + '/mapillary/annotations/val_10_new.json',
-    },
-    'coco_2017_val_20pct_new': {
-        IM_DIR:
-            _DATA_DIR + '/mapillary/images/validations',
-        ANN_FN:
-            _DATA_DIR + '/mapillary/annotations/validation_801.json',
-    },
-    'coco_2017_test_multi_0':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_0.json'
-    },
-    'coco_2017_test_multi_1':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_1.json'
-    },
-    'coco_2017_test_multi_2':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_2.json'
-    },
-    'coco_2017_test_multi_3':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_3.json'
-    },
-    'coco_2017_test_multi_4':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_4.json'
-    },
-    'coco_2017_test_multi_5':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_5.json'
-    },
-    'coco_2017_test_multi_6':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_6.json'
-    },
-    'coco_2017_test_multi_7':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_7.json'
-    },
-    'coco_2017_test_multi_8':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_8.json'
-    },
-    'coco_2017_test_multi_9':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_9.json'
-    },
-    'coco_2017_test_multi_10':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_10.json'
-    },
-    'coco_2017_test_multi_11':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_11.json'
-    },
-    'coco_2017_test_multi_12':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_12.json'
-    },
-    'coco_2017_test_multi_13':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_13.json'
-    },
-    'coco_2017_test_multi_14':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_14.json'
-    },
-    'coco_2017_test_multi_15':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_15.json'
-    },
-    'coco_2017_test_multi_16':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_16.json'
-    },
-    'coco_2017_test_multi_17':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_17.json'
-    },
-    'coco_2017_test_multi_18':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_18.json'
-    },
-    'coco_2017_test_multi_19':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_19.json'
-    },
-    'coco_2017_test_multi_20':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_20.json'
-    },
-    'coco_2017_test_multi_21':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_21.json'
-    },
-    'coco_2017_test_multi_22':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_22.json'
-    },
-    'coco_2017_test_multi_23':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_23.json'
-    },
-    'coco_2017_test_multi_24':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_24.json'
-    },
-    'coco_2017_test_multi_25':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_25.json'
-    },
-    'coco_2017_test_multi_26':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_26.json'
-    },
-    'coco_2017_test_multi_27':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_27.json'
-    },
-    'coco_2017_test_multi_28':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_28.json'
-    },
-    'coco_2017_test_multi_29':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_29.json'
-    },
-    'coco_2017_test_multi_30':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_30.json'
-    },
-    'coco_2017_test_multi_31':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_31.json'
-    },
-    'coco_2017_test_multi_32':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_32.json'
-    },
-    'coco_2017_test_multi_33':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_33.json'
-    },
-    'coco_2017_test_multi_34':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_34.json'
-    },
-    'coco_2017_test_multi_35':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_35.json'
-    },
-    'coco_2017_test_multi_36':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_36.json'
-    },
-    'coco_2017_test_multi_37':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_37.json'
-    },
-    'coco_2017_test_multi_38':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_38.json'
-    },
-    'coco_2017_test_multi_39':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_39.json'
-    },
-    'coco_2017_test_multi_40':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_40.json'
-    },
-    'coco_2017_test_multi_41':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_41.json'
-    },
-    'coco_2017_test_multi_42':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_42.json'
-    },
-    'coco_2017_test_multi_43':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_43.json'
-    },
-    'coco_2017_test_multi_44':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_44.json'
-    },
-    'coco_2017_test_multi_45':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_45.json'
-    },
-    'coco_2017_test_multi_46':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_46.json'
-    },
-    'coco_2017_test_multi_47':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_47.json'
-    },
-    'coco_2017_test_multi_48':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_48.json'
-    },
-    'coco_2017_test_multi_49':
-    {
-	    IM_DIR:
-		    _DATA_DIR + '/mapillary/images/test',
-	    ANN_FN:
-	        _DATA_DIR + '/mapillary/annotations/test_49.json'
     }
 }

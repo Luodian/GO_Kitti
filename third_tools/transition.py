@@ -219,15 +219,14 @@ def vis_labels(p, task, label_ids, label_names):
 # p.join()
 
 
-def gen_coco_data(p, orig_id, task, images, annotations):
+def gen_coco_data(p, orig_id, task, images, annotations, part):
     data_path = "/nfs/project/libo_i/go_kitti/data/training/image_2"
     file_list = os.listdir(data_path)
 
-    num_img = 20
+    num_img = len(part)
 
-    for i in range(180, 180 + num_img):
-        # for i in range(len(select_list)):
-        # process_file(task, file_list[i], i+1, len(file_list), orig_id, images, annotations)
+    for i in part:
+        i = int(i)
         p.apply_async(process_file,
                       args=(task, file_list[i], i + 1, num_img, orig_id, images, annotations
                             ,))
@@ -251,15 +250,37 @@ kitti_category = [{"id": 1, "name": "person", "supercategory": "human"},
 
 if __name__ == '__main__':
     task = "training"
-    p = Pool()
-    # task = 'validation'
-    manager = Manager()
-    images = manager.dict()
-    annotations = manager.dict()
     config_file = os.path.join(Data_ROOT, 'config.json')
-    json_file = '/nfs/project/libo_i/go_kitti/data/annotations/{}_20.json'.format(task)
+
+    import random
+
+    lst = np.arange(0, 200)
+    np.random.shuffle(lst)
+    train_part = lst[:180]
+    val_part = lst[180:]
+
+    train_json_file = '/nfs/project/libo_i/go_kitti/data/annotations/{}_180_Part1.json'.format(task)
     # category, orig_id = gen_category(config_file)
 
-    gen_coco_data(p, kitti_id_map, task, images, annotations)
-    save_data(kitti_category, images, annotations, json_file)
+    train_p = Pool()
+    # task = 'validation'
+    train_manager = Manager()
+    train_images = train_manager.dict()
+    train_annotations = train_manager.dict()
+
+    gen_coco_data(train_p, kitti_id_map, task, train_images, train_annotations, train_part)
+    save_data(kitti_category, train_images, train_annotations, train_json_file)
+    print("Done!")
+
+    val_json_file = '/nfs/project/libo_i/go_kitti/data/annotations/{}_20_Part1.json'.format(task)
+    # category, orig_id = gen_category(config_file)
+
+    val_p = Pool()
+    # task = 'validation'
+    val_manager = Manager()
+    val_images = val_manager.dict()
+    val_annotations = val_manager.dict()
+
+    gen_coco_data(val_p, kitti_id_map, task, val_images, val_annotations, val_part)
+    save_data(kitti_category, val_images, val_annotations, val_json_file)
     print("Done!")

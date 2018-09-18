@@ -168,11 +168,20 @@ def main():
     elif args.dataset == "coco2014":
         cfg.TRAIN.DATASETS = ('coco_2014_train',)
         cfg.MODEL.NUM_CLASSES = 81
-    elif args.dataset == "kitti_train_aug":
-        cfg.TRAIN.DATASETS = ('kitti_train_aug',)
+    elif args.dataset == "kitti_train_180_part1":
+        cfg.TRAIN.DATASETS = ('kitti_train_180_part1',)
         cfg.MODEL.NUM_CLASSES = 11
-    elif args.dataset == "kitti_train":
-        cfg.TRAIN.DATASETS = ('kitti_train',)
+    elif args.dataset == "kitti_train_180_part2":
+        cfg.TRAIN.DATASETS = ('kitti_train_180_part2',)
+        cfg.MODEL.NUM_CLASSES = 11
+    elif args.dataset == "kitti_train_180_part3":
+        cfg.TRAIN.DATASETS = ('kitti_train_180_part3',)
+        cfg.MODEL.NUM_CLASSES = 11
+    elif args.dataset == "kitti_train_180_part4":
+        cfg.TRAIN.DATASETS = ('kitti_train_180_part4',)
+        cfg.MODEL.NUM_CLASSES = 11
+    elif args.dataset == "kitti_train_180_part5":
+        cfg.TRAIN.DATASETS = ('kitti_train_180_part5',)
         cfg.MODEL.NUM_CLASSES = 11
     elif args.dataset == "kitti_train_180":
         cfg.TRAIN.DATASETS = ('kitti_train_180',)
