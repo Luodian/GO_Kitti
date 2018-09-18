@@ -180,6 +180,9 @@ def main():
     elif args.dataset == "apollo_train":
         cfg.TRAIN.DATASETS = ('apollo_train',)
         cfg.MODEL.NUM_CLASSES = 9
+    elif args.dataset == "cityscape_train":
+        cfg.TRAIN.DATASETS = ('cityscape_train',)
+        cfg.MODEL.NUM_CLASSES = 9
     else:
         raise ValueError("Unexpected args.dataset: {}".format(args.dataset))
 

@@ -58,6 +58,13 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/apolloscape/annotations/training.json'
     },
+    'cityscape_train':
+    {
+        IM_DIR:
+            _DATA_DIR + '/cityscape/images',
+        ANN_FN:
+            _DATA_DIR + '/cityscape/annotations/training.json'
+    },
     'kitti_train_aug': {
         IM_DIR:
             _DATA_DIR + '/aug',
