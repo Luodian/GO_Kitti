@@ -18,8 +18,9 @@ def subproc(cmd):
         code = e.returncode  # Return code
 
 
-assigned_model = "/nfs/project/libo_i/go_kitti/train_output/full_101x_multi/ckpt/model_step4999.pth"
-exp_name = "map_full_demo"
+assigned_model = "/nfs/project/libo_i/go_kitti/train_output/CS_KT_CV/kitti_train_180_part1/ckpt/model_step3999.pth"
+exp_name = "CS_KT_CV"
+
 infer_output_dir = "/nfs/project/libo_i/go_kitti/infer_output/{}".format(exp_name)
 cmp_rush_rob = "/nfs/project/libo_i/go_kitti/data/testing/rush_rob_results"
 gt_path = "/nfs/project/libo_i/go_kitti/data/testing/kitti_demo_image"
@@ -31,16 +32,17 @@ test_cmd = "--dataset coco_kitti_val_20_part1 \
             --output_dir /nfs/project/libo_i/go_kitti/test_output/ide_test \
             --set INFER_OR_TEST True M_ANCHOR True".format(assigned_model)
 
-infer_cmd = "--dataset kitti \
+infer_cmd = "python3 /nfs/project/libo_i/go_kitti/tools/infer_simple.py \
+            --dataset kitti \
             --cfg /nfs/project/libo_i/go_kitti/configs/baselines/kitti_final.yaml \
             --load_ckpt {} \
             --image_dir /nfs/project/libo_i/go_kitti/data/testing/kitti_demo_image \
             --output_dir /nfs/project/libo_i/go_kitti/infer_output/{} \
-            --set INFER_OR_TEST True M_ANCHOR True".format(assigned_model, exp_name)
+            --set INFER_OR_TEST True".format(assigned_model, exp_name)
 
 
 def infer_and_combine(infer_cmd, infer_output_dir, cmp_rush_rob, gt_path, exp_name):
-    # subproc(infer_cmd)
+    subproc(infer_cmd)
     results_lists = os.listdir(infer_output_dir)
 
     for item in results_lists:

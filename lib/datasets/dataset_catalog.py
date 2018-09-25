@@ -65,6 +65,13 @@ DATASETS = {
         ANN_FN:
             _DATA_DIR + '/cityscape/annotations/training.json'
     },
+    'coco_cityscape_val':
+        {
+            IM_DIR:
+                _DATA_DIR + '/cityscape/images',
+            ANN_FN:
+                _DATA_DIR + '/cityscape/annotations/validation.json'
+        },
     'kitti_train_aug': {
         IM_DIR:
             _DATA_DIR + '/aug',

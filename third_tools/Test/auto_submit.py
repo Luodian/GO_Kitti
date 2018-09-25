@@ -10,7 +10,7 @@ import subprocess
 def auto_submit(lists, shell_path):
     for item in lists:
         cmd1 = "cd /mnt/common/luban-client/"
-        cmd2 = "./luban offline submit --username=luodianlibo_i --token=16e5dce05f2405cd6a9e80e7c358bd0b --projectId=315 --imageId=1796 --scriptPath={} --scriptParam=\"{}\"".format(
+        cmd2 = "./luban offline submit --username=luodianlibo_i --token=16e5dce05f2405cd6a9e80e7c358bd0b --projectId=315 --imageId=1796 --scriptPath={} --scriptParam=\"{}\" --gpus=4".format(
             shell_path, item)
         cmd = cmd1 + " && " + cmd2
         subprocess.call(cmd, shell=True)
@@ -22,5 +22,5 @@ train_lists = ["kitti_train_180_part1",
                "kitti_train_180_part4",
                "kitti_train_180_part5"]
 
-shell_path = "/nfs/project/libo_i/go_kitti/setup_shell/cross_validation/CS_KT_Multi.sh"
+shell_path = "/nfs/project/libo_i/go_kitti/setup_shell/cross_validation/APL_KT_Multi.sh"
 auto_submit(train_lists, shell_path)
