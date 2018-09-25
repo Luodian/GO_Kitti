@@ -123,8 +123,20 @@ if __name__ == '__main__':
     elif args.dataset == "coco_kitti_test":
         cfg.TEST.DATASETS = ('coco_kitti_test',)
         cfg.MODEL.NUM_CLASSES = 11
-    elif args.dataset == "coco_kitti_val_20":
-        cfg.TEST.DATASETS = ('coco_kitti_val_20',)
+    elif args.dataset == "coco_kitti_val_20_part1":
+        cfg.TEST.DATASETS = ('coco_kitti_val_20_part1',)
+        cfg.MODEL.NUM_CLASSES = 11
+    elif args.dataset == "coco_kitti_val_20_part2":
+        cfg.TEST.DATASETS = ('coco_kitti_val_20_part2',)
+        cfg.MODEL.NUM_CLASSES = 11
+    elif args.dataset == "coco_kitti_val_20_part3":
+        cfg.TEST.DATASETS = ('coco_kitti_val_20_part3',)
+        cfg.MODEL.NUM_CLASSES = 11
+    elif args.dataset == "coco_kitti_val_20_part4":
+        cfg.TEST.DATASETS = ('coco_kitti_val_20_part4',)
+        cfg.MODEL.NUM_CLASSES = 11
+    elif args.dataset == "coco_kitti_val_20_part5":
+        cfg.TEST.DATASETS = ('coco_kitti_val_20_part5',)
         cfg.MODEL.NUM_CLASSES = 11
     else:  # For subprocess call
         assert cfg.TEST.DATASETS, 'cfg.TEST.DATASETS shouldn\'t be empty'
