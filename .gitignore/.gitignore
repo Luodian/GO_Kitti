@@ -105,6 +105,7 @@ venv.bak/
 .idea/
 .DS_Store
 data/
+third_tools/auto_submit.py
 
 
 
