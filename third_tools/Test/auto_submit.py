@@ -20,7 +20,8 @@ train_lists = ["kitti_train_180_part1",
                "kitti_train_180_part2",
                "kitti_train_180_part3",
                "kitti_train_180_part4",
-               "kitti_train_180_part5"]
+               "kitti_train_180_part5",
+               "kitti_train"]
 
-shell_path = "/nfs/project/libo_i/go_kitti/setup_shell/cross_validation/APL_KT_Multi.sh"
+shell_path = "/nfs/project/libo_i/go_kitti/setup_shell/cross_validation/MAP_AUG_101X_KT.sh"
 auto_submit(train_lists, shell_path)

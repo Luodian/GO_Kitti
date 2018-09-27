@@ -95,10 +95,6 @@ def collect_info(root_path, test_lists):
     for key in average_dict:
         average_dict[int(key)] = average_dict.pop(key)
 
-    # 存parent_dict的详细信息
-    with open(root_path + ".json", "w") as f:
-        json.dump(parent_dict, f)
-
     # 存average_dict中的平均值信息
     average_json_save_path = "{}_average".format(root_path)
 
@@ -109,19 +105,86 @@ def collect_info(root_path, test_lists):
         f.writelines(lines)
 
     f.close()
-    return parent_dict
 
-    # sum = 0
-    # for subitem in mAP_pool:
-    #     sum += float(subitem)
-    # average_mAP = sum / len(mAP_pool)
-    #
-    # store_line = "Average mAP: {}".format(average_mAP)
-    # f = open(full_path, 'a')
-    # last_line = open(full_path).readlines()[-1]
-    # if last_line.startswith("Average") is False:
-    #     f.writelines(store_line)
-    #     f.close()
+    # 存parent_dict的详细信息
+    with open(root_path + ".json", "w") as f:
+        json.dump(parent_dict, f)
+
+    return parent_dict, average_dict
+
+
+def merge_cv_results(average_dict, root_path, train_set_lists, exp_name):
+    from operator import itemgetter
+    formated_item = []
+    for key in average_dict:
+        formated_item.append({"steps": key, 'mAP': average_dict[key]})
+
+    rows_by_mAP = sorted(formated_item, key=itemgetter('mAP'))
+    best_item = rows_by_mAP[-1]
+    steps = best_item['steps']
+
+    part1_path = os.path.join(root_path, "kitti_train_180_part5", "model_step{}.pth".format(steps))
+    sample_file_lines = open(part1_path).readlines()
+
+    cat_matrix = []
+
+    for item in train_set_lists:
+        item_path = os.path.join(root_path, item, "model_step{}.pth".format(steps))
+        if os.path.exists(item_path) is False:
+            continue
+
+        results_lines = open(item_path).read()
+        categories_value_list = re.findall("INFO json_dataset_evaluator.py: 231: (\S+)\n", results_lines)
+        for index, subitem in enumerate(categories_value_list):
+            if subitem == 'nan':
+                categories_value_list[index] = 0
+            else:
+                categories_value_list[index] = float(subitem)
+
+        cat_matrix.append(categories_value_list)
+
+    average_list = []
+
+    cat_nums = 10
+    # 对矩阵逐类别计算均值
+    for i in range(cat_nums * 2):
+        sum_value = 0
+        for item in cat_matrix:
+            sub_cat_value = item[i]
+            sum_value += float(sub_cat_value)
+
+        avg_value = float(sum_value) / len(cat_matrix)
+        average_list.append(avg_value)
+
+    # 填充会最后的merged_results文件里
+    filled_lists = []
+    for item in average_list:
+        filled_lists.append("INFO json_dataset_evaluator.py: 231: {}".format(round(item, 2)))
+
+    bbox_anchor_index = 0
+    for i in range(len(sample_file_lines)):
+        if sample_file_lines[i].startswith("INFO json_dataset_evaluator.py: 231: "):
+            bbox_anchor_index = i
+            break
+
+    assert bbox_anchor_index != 0
+
+    for i in range(10):
+        sample_file_lines[bbox_anchor_index + i] = filled_lists[i] + '\n'
+
+    segms_anchor_index = 0
+    for i in range(bbox_anchor_index + 10, len(sample_file_lines)):
+        if sample_file_lines[i].startswith("INFO json_dataset_evaluator.py: 231: "):
+            segms_anchor_index = i
+            break
+
+    for i in range(10):
+        sample_file_lines[segms_anchor_index + i] = filled_lists[i + 10] + '\n'
+
+    merged_results_path = os.path.join(root_path, "{}_merged_output.txt".format(exp_name))
+
+    with open(merged_results_path, 'w') as f:
+        f.writelines(sample_file_lines)
 
 
 # 指定需要测试的model列表
@@ -138,10 +201,36 @@ test_lists = ["coco_kitti_val_20_part1",
               "coco_kitti_val_20_part4",
               "coco_kitti_val_20_part5"]
 
-method_name = "CS_KT_CV"
-root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(method_name)
 
-for i, item in enumerate(train_lists):
-    subproc("bash /nfs/project/libo_i/go_kitti/setup_shell/cross_validation/test.sh {} {} {}".format(item, test_lists[i], method_name))
+def group_run():
+    method_name_lists = ["MAP_full_101X_KT",
+                         "MAP_aug_101X_KT",
+                         "X101_2237"]
 
-parent_dict = collect_info(root_path, train_lists)
+    for pa_item in method_name_lists:
+        root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(pa_item)
+
+        for i, item in enumerate(train_lists):
+            subproc(
+                "bash /nfs/project/libo_i/go_kitti/setup_shell/test/M_anchor_test.sh {} {} {}".format(item,
+                                                                                                      test_lists[i],
+                                                                                                      pa_item))
+
+        parent_dict, average_dict = collect_info(root_path, train_lists)
+        merge_cv_results(average_dict, root_path, train_lists, pa_item)
+
+
+def single_run():
+    method_name = "X101_2237"
+    root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(method_name)
+    for i, item in enumerate(train_lists):
+        subproc(
+            "bash /nfs/project/libo_i/go_kitti/setup_shell/test/No_anchor_test.sh {} {} {}".format(item,
+                                                                                                   test_lists[i],
+                                                                                                   method_name))
+
+    parent_dict, average_dict = collect_info(root_path, train_lists)
+    merge_cv_results(average_dict, root_path, train_lists, method_name)
+
+
+single_run()

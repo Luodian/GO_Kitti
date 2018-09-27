@@ -18,8 +18,8 @@ def subproc(cmd):
         code = e.returncode  # Return code
 
 
-assigned_model = "/nfs/project/libo_i/go_kitti/train_output/CS_KT_CV/kitti_train_180_part1/ckpt/model_step3999.pth"
-exp_name = "CS_KT_CV"
+assigned_model = "/nfs/project/libo_i/go_kitti/train_output/full_101x_multi/ckpt/model_step4999.pth"
+exp_name = "map_full_demo_4999"
 
 infer_output_dir = "/nfs/project/libo_i/go_kitti/infer_output/{}".format(exp_name)
 cmp_rush_rob = "/nfs/project/libo_i/go_kitti/data/testing/rush_rob_results"
@@ -38,8 +38,7 @@ infer_cmd = "python3 /nfs/project/libo_i/go_kitti/tools/infer_simple.py \
             --load_ckpt {} \
             --image_dir /nfs/project/libo_i/go_kitti/data/testing/kitti_demo_image \
             --output_dir /nfs/project/libo_i/go_kitti/infer_output/{} \
-            --set INFER_OR_TEST True".format(assigned_model, exp_name)
-
+            --set INFER_OR_TEST True M_ANCHOR True".format(assigned_model, exp_name)
 
 def infer_and_combine(infer_cmd, infer_output_dir, cmp_rush_rob, gt_path, exp_name):
     subproc(infer_cmd)
