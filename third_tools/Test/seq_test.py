@@ -41,6 +41,9 @@ def collect_info(root_path, test_lists):
         full_path = os.path.join(root_path, item, 'all_results.txt')
         print(full_path)
 
+        if os.path.exists(full_path) is False:
+            continue
+
         lines = open(full_path).readlines()
         line_count = len(lines)
 
@@ -123,9 +126,6 @@ def merge_cv_results(average_dict, root_path, train_set_lists, exp_name):
     best_item = rows_by_mAP[-1]
     steps = best_item['steps']
 
-    part1_path = os.path.join(root_path, "kitti_train_180_part5", "model_step{}.pth".format(steps))
-    sample_file_lines = open(part1_path).readlines()
-
     cat_matrix = []
 
     for item in train_set_lists:
@@ -137,7 +137,7 @@ def merge_cv_results(average_dict, root_path, train_set_lists, exp_name):
         categories_value_list = re.findall("INFO json_dataset_evaluator.py: 231: (\S+)\n", results_lines)
         for index, subitem in enumerate(categories_value_list):
             if subitem == 'nan':
-                categories_value_list[index] = 0
+                continue
             else:
                 categories_value_list[index] = float(subitem)
 
@@ -149,42 +149,57 @@ def merge_cv_results(average_dict, root_path, train_set_lists, exp_name):
     # 对矩阵逐类别计算均值
     for i in range(cat_nums * 2):
         sum_value = 0
+        avai_cnt = 0
         for item in cat_matrix:
             sub_cat_value = item[i]
-            sum_value += float(sub_cat_value)
+            if sub_cat_value != 'nan':
+                sum_value += float(sub_cat_value)
+                avai_cnt += 1
 
-        avg_value = float(sum_value) / len(cat_matrix)
-        average_list.append(avg_value)
+        if avai_cnt == 0:
+            average_list.append('nan')
+        else:
+            avg_value = float(sum_value) / avai_cnt
+            average_list.append(round(avg_value, 2))
 
-    # 填充会最后的merged_results文件里
-    filled_lists = []
-    for item in average_list:
-        filled_lists.append("INFO json_dataset_evaluator.py: 231: {}".format(round(item, 2)))
-
-    bbox_anchor_index = 0
-    for i in range(len(sample_file_lines)):
-        if sample_file_lines[i].startswith("INFO json_dataset_evaluator.py: 231: "):
-            bbox_anchor_index = i
-            break
-
-    assert bbox_anchor_index != 0
-
-    for i in range(10):
-        sample_file_lines[bbox_anchor_index + i] = filled_lists[i] + '\n'
-
-    segms_anchor_index = 0
-    for i in range(bbox_anchor_index + 10, len(sample_file_lines)):
-        if sample_file_lines[i].startswith("INFO json_dataset_evaluator.py: 231: "):
-            segms_anchor_index = i
-            break
-
-    for i in range(10):
-        sample_file_lines[segms_anchor_index + i] = filled_lists[i + 10] + '\n'
-
-    merged_results_path = os.path.join(root_path, "{}_merged_output.txt".format(exp_name))
+    merged_results_path = os.path.join(root_path, "{}_{}_category_average.txt".format(exp_name, steps))
 
     with open(merged_results_path, 'w') as f:
-        f.writelines(sample_file_lines)
+        sum_value = 0
+        cnt = 0
+        for item in average_list[10:]:
+            f.write(str(item) + ',')
+            if item != 'nan':
+                sum_value += float(item)
+                cnt += 1
+
+        avg_value = float(sum_value) / cnt
+        f.write('\n' + str(avg_value))
+
+    # # 填充会最后的merged_results文件里
+    # filled_lists = []
+    # for item in average_list:
+    #     filled_lists.append("INFO json_dataset_evaluator.py: 231: {}".format(round(item, 2)))
+    #
+    # bbox_anchor_index = 0
+    # for i in range(len(sample_file_lines)):
+    #     if sample_file_lines[i].startswith("INFO json_dataset_evaluator.py: 231: "):
+    #         bbox_anchor_index = i
+    #         break
+    #
+    # assert bbox_anchor_index != 0
+    #
+    # for i in range(10):
+    #     sample_file_lines[bbox_anchor_index + i] = filled_lists[i] + '\n'
+    #
+    # segms_anchor_index = 0
+    # for i in range(bbox_anchor_index + 10, len(sample_file_lines)):
+    #     if sample_file_lines[i].startswith("INFO json_dataset_evaluator.py: 231: "):
+    #         segms_anchor_index = i
+    #         break
+    #
+    # for i in range(10):
+    #     sample_file_lines[segms_anchor_index + i] = filled_lists[i + 10] + '\n'
 
 
 # 指定需要测试的model列表
@@ -210,27 +225,27 @@ def group_run():
     for pa_item in method_name_lists:
         root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(pa_item)
 
-        for i, item in enumerate(train_lists):
-            subproc(
-                "bash /nfs/project/libo_i/go_kitti/setup_shell/test/M_anchor_test.sh {} {} {}".format(item,
-                                                                                                      test_lists[i],
-                                                                                                      pa_item))
+        # for i, item in enumerate(train_lists):
+        #     subproc(
+        #         "bash /nfs/project/libo_i/go_kitti/setup_shell/test/M_anchor_test.sh {} {} {}".format(item,
+        #                                                                                               test_lists[i],
+        #                                                                                               pa_item))
 
         parent_dict, average_dict = collect_info(root_path, train_lists)
         merge_cv_results(average_dict, root_path, train_lists, pa_item)
 
 
 def single_run():
-    method_name = "X101_2237"
+    method_name = "MAP_aug_101X_KT"
     root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(method_name)
-    for i, item in enumerate(train_lists):
-        subproc(
-            "bash /nfs/project/libo_i/go_kitti/setup_shell/test/No_anchor_test.sh {} {} {}".format(item,
-                                                                                                   test_lists[i],
-                                                                                                   method_name))
+    # for i, item in enumerate(train_lists):
+    #     subproc(
+    #         "bash /nfs/project/libo_i/go_kitti/setup_shell/test/No_anchor_test.sh {} {} {}".format(item,
+    #                                                                                                test_lists[i],
+    #                                                                                                method_name))
 
     parent_dict, average_dict = collect_info(root_path, train_lists)
     merge_cv_results(average_dict, root_path, train_lists, method_name)
 
 
-single_run()
+group_run()

@@ -186,7 +186,7 @@ def test_net_on_dataset(
         if os.path.exists(args.save_json_path) is False:
             os.makedirs(args.save_json_path)
 
-        json_path = os.path.join(args.save_json_path, args.method_name)
+        json_path = os.path.join(args.save_json_path, args.method_name + ".json")
         print("Save {}".format(json_path))
         open(json_path, 'w').write(json.dumps(output_json))
 
