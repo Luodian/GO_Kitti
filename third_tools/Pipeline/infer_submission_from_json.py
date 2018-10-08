@@ -1,6 +1,6 @@
 import subprocess
 import os
-import cv2
+import sys
 import matplotlib
 
 matplotlib.use('Agg')
@@ -18,9 +18,13 @@ def subproc(cmd):
         code = e.returncode  # Return code
 
 
+# 这个dummpy_path是用来占位的，因为必须要有load_ckpt参数
 dummy_ckpt_path = "/nfs/project/libo_i/go_kitti/train_output/X101_2237/kitti_train/ckpt/model_step2999.pth"
-assigned_path = "/nfs/project/libo_i/go_kitti/good_model/detections_20/MAP_aug_101X_KT.json"
-exp_name = "MAP_aug_101X_KT"
+# assigned_path = "/nfs/project/libo_i/go_kitti/good_model/detections_20/MAP_aug_101X_KT.json"
+# exp_name = "MAP_aug_101X_KT"
+# 这里用于指定模型路径和模型名字，会在infer_output/下面生成
+assigned_path = sys.argv[1]
+exp_name = sys.argv[2]
 
 infer_output_dir = "/nfs/project/libo_i/go_kitti/infer_output/{}".format(exp_name)
 cmp_rush_rob = "/nfs/project/libo_i/go_kitti/data/testing/rush_rob_results"

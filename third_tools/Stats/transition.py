@@ -256,6 +256,7 @@ if __name__ == '__main__':
 
     lst = np.arange(0, 200)
     np.random.shuffle(lst)
+    # 通过shuffle的操作将图片序号打混
     train_part = lst[:180]
     val_part = lst[180:]
 

@@ -223,18 +223,25 @@ def group_run():
                          "X101_2237"]
 
     for pa_item in method_name_lists:
+        # 这里的root_path+method_name_lists[i]，会形成一个具体的文件夹路径
+        # 将生成的对应测试项目信息保存到里面
         root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(pa_item)
 
-        # for i, item in enumerate(train_lists):
-        #     subproc(
-        #         "bash /nfs/project/libo_i/go_kitti/setup_shell/test/M_anchor_test.sh {} {} {}".format(item,
-        #                                                                                               test_lists[i],
-        #                                                                                               pa_item))
+        for i, item in enumerate(train_lists):
+            # M_anchor_test.sh 是一个测试脚本，其中指定的参数有三个
+            # 1. 训练集名字：用于找到对应的模型输出路径
+            # 2. 测试集名字：用于匹配对应的测试文件路径
+            # 3. 父项目名字，用于生成最终的输出文件目录
+            subproc(
+                "bash /nfs/project/libo_i/go_kitti/setup_shell/test/M_anchor_test.sh {} {} {}".format(item,
+                                                                                                      test_lists[i],
+                                                                                                      pa_item))
 
         parent_dict, average_dict = collect_info(root_path, train_lists)
         merge_cv_results(average_dict, root_path, train_lists, pa_item)
 
 
+# single_run的目的是省去了pa_item这个步骤，主要用于前期测试和后期调试
 def single_run():
     method_name = "MAP_aug_101X_KT"
     root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(method_name)
