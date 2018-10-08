@@ -18,40 +18,20 @@ def subproc(cmd):
         code = e.returncode  # Return code
 
 
-dummy_ckpt_path = "/nfs/project/libo_i/go_kitti/train_output/X101_2237/kitti_train/ckpt/model_step2999.pth"
-assigned_path = "/nfs/project/libo_i/go_kitti/good_model/MAP_full_101X_KT.json"
-exp_name = "Map_full_101X_KT"
+assigned_model = "/nfs/project/libo_i/go_kitti/train_output/X101_2237/kitti_train/ckpt/model_step2999.pth"
+exp_name = "X101_2237"
 
 infer_output_dir = "/nfs/project/libo_i/go_kitti/infer_output/{}".format(exp_name)
 cmp_rush_rob = "/nfs/project/libo_i/go_kitti/data/testing/rush_rob_results"
 gt_path = "/nfs/project/libo_i/go_kitti/data/testing/kitti_demo_image"
 
-# 第一个参数：实验名字
-# 第二个参数：ckpt的路径
-# 第三个参数：读取json的路径
-# 第四个参数：输出路径
-
-submission_output_path = "/nfs/project/libo_i/go_kitti/submission/{}".format(exp_name)
-
-infer_submission_cmd = "bash /nfs/project/libo_i/go_kitti/setup_shell/test/infer_submission_from_json.sh {} {} {} {}".format(
-    exp_name,
-    dummy_ckpt_path,
-    assigned_path,
-    submission_output_path)
-
-infer_img_cmd = "python3 /nfs/project/libo_i/go_kitti/tools/infer_simple.py \
+infer_cmd = "python3 /nfs/project/libo_i/go_kitti/tools/infer_simple.py \
             --dataset kitti \
             --cfg /nfs/project/libo_i/go_kitti/configs/baselines/kitti_final.yaml \
             --load_ckpt {} \
-            --load_json \
-            --load_json_path {} \
             --image_dir /nfs/project/libo_i/go_kitti/data/testing/kitti_demo_image \
             --output_dir /nfs/project/libo_i/go_kitti/infer_output/{} \
-            --set INFER_OR_TEST True M_ANCHOR True".format(dummy_ckpt_path, assigned_path, exp_name)
-
-
-def infer_submission(infer_cmd):
-    subproc(infer_cmd)
+            --set INFER_OR_TEST True".format(assigned_model, exp_name)
 
 
 def infer_and_combine(infer_cmd, infer_output_dir, cmp_rush_rob, gt_path, exp_name):
@@ -93,5 +73,4 @@ def infer_and_combine(infer_cmd, infer_output_dir, cmp_rush_rob, gt_path, exp_na
         plt.savefig(os.path.join(save_path, item), dpi=300)
 
 
-# infer_submission(infer_submission_cmd)
-infer_and_combine(infer_img_cmd, infer_output_dir, cmp_rush_rob, gt_path, exp_name)
+infer_and_combine(infer_cmd, infer_output_dir, cmp_rush_rob, gt_path, exp_name)
