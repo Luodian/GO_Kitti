@@ -228,6 +228,7 @@ def group_run():
         root_path = "/nfs/project/libo_i/go_kitti/model_test/{}".format(pa_item)
 
         for i, item in enumerate(train_lists):
+            # 这是一个系列测试脚本，用于运行在一个父目录下的一系列子目录中的ckpt文件
             # M_anchor_test.sh 是一个测试脚本，其中指定的参数有三个
             # 1. 训练集名字：用于找到对应的模型输出路径
             # 2. 测试集名字：用于匹配对应的测试文件路径

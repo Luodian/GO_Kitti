@@ -8,8 +8,9 @@ def output_json(exp_name, ckpt_path, json_save_path, param):
     # 第一个参数：实验名字
     # 第二个参数：ckpt的路径
     # 第三个参数：json_path存下来的路径
-
-    cmd = "bash /nfs/project/libo_i/go_kitti/setup_shell/test/ensemble.sh {} {} {} {}".format(exp_name, ckpt_path,
+    # 该脚本的作用就是一个base的引导脚本，由外围的infer_json_from_model.py启动，传入参数引导相应的测试
+    cmd = "bash /nfs/project/libo_i/go_kitti/setup_shell/test/infer_json_base.sh {} {} {} {}".format(exp_name,
+                                                                                                     ckpt_path,
                                                                                               json_save_path, param)
     print(cmd)
     subprocess.call(cmd, shell=True)
